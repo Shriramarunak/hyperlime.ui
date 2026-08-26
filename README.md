@@ -1,4 +1,4 @@
-# vibe.ui
+# hyper.lime
 
 Open-source React UI components designed for AI-generated ("vibe-coded") apps — in a neon-lime, terminal-inspired style.
 

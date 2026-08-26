@@ -816,7 +816,7 @@ input:checked       /* thick lime ring */`,
         demos: [
           {
             title: "All icons",
-            code: `import { Icon, ICON_NAMES } from "vibe-ui";
+            code: `import { Icon, ICON_NAMES } from "hyperlime";
 
 {ICON_NAMES.map((name) => (
   <Icon key={name} name={name} size={16} />
@@ -1020,14 +1020,14 @@ input:checked       /* thick lime ring */`,
             code: `<Typography variant="h2">h2 · Build fast</Typography>
 <Typography variant="subtitle">Subtitle line</Typography>
 <Typography variant="body2">Body text</Typography>
-<Typography variant="mono">npm i vibe-ui</Typography>
+<Typography variant="mono">npm i hyperlime</Typography>
 <Typography variant="caption">fine print</Typography>`,
             node: (
               <div className="stack-sm">
                 <Typography variant="h2">h2 · Build fast</Typography>
                 <Typography variant="subtitle">subtitle · A supporting line of copy.</Typography>
                 <Typography variant="body2">body2 · Regular paragraph text.</Typography>
-                <Typography variant="mono">mono · npm i vibe-ui</Typography>
+                <Typography variant="mono">mono · npm i hyperlime</Typography>
                 <Typography variant="caption">caption · fine print</Typography>
               </div>
             ),
@@ -1242,7 +1242,7 @@ input:checked       /* thick lime ring */`,
           {
             title: "With actions",
             code: `<AppBar>
-  <strong>vibe.ui</strong>
+  <strong>hyper.lime</strong>
   <Badge variant="success" dot>live</Badge>
   <span style={{ marginLeft: "auto" }}>
     <IconButton label="Settings">
@@ -1252,7 +1252,7 @@ input:checked       /* thick lime ring */`,
 </AppBar>`,
             node: (
               <AppBar>
-                <strong style={{ fontSize: 16 }}>vibe.ui</strong>
+                <strong style={{ fontSize: 16 }}>hyper.lime</strong>
                 <Badge variant="success" dot>live</Badge>
                 <span style={{ marginLeft: "auto" }}>
                   <IconButton label="Settings"><Icon name="settings" /></IconButton>
@@ -1705,7 +1705,7 @@ input:checked       /* thick lime ring */`,
         demos: [
           {
             title: "Dialog alias",
-            code: `import { Dialog } from "vibe-ui";
+            code: `import { Dialog } from "hyperlime";
 // Dialog is Modal with header/footer styling
 <Dialog open={open} onClose={close} title="Title" />`,
             node: <ModalDemo />,

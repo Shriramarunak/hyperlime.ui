@@ -64,7 +64,7 @@ function Nav({ onToggleTheme, theme, query, onSearch }) {
     <nav className="nav">
       <div className="container nav__inner">
         <a href="#" className="nav__logo">
-          vibe<span className="lime">.ui</span>
+          hyper<span className="lime">.lime</span>
         </a>
         <div className="nav__search">
           <Icon name="search" size={15} />
@@ -150,7 +150,7 @@ function Hero({ total }) {
       </div>
       <div className="hero__actions">
         <Button size="lg" onClick={() => document.getElementById("install")?.scrollIntoView({ behavior: "smooth" })}>
-          npm i vibe-ui
+          npm i hyperlime
         </Button>
         <Button variant="secondary" size="lg" onClick={() => document.getElementById("docs")?.scrollIntoView({ behavior: "smooth" })}>
           BROWSE COMPONENTS ↓
@@ -401,12 +401,12 @@ function Install() {
           Ship in seconds<span className="lime">.</span>
         </h2>
         <div className="install-cmd">
-          <code>$ npm i vibe-ui</code>
+          <code>$ npm i hyperlime</code>
           <span className="mono-label">THAT'S THE WHOLE SETUP</span>
         </div>
         <CodeBlock
           filename="deploy.jsx"
-          code={`import { Button, Card, Input } from "vibe-ui";
+          code={`import { Button, Card, Input } from "hyperlime";
 
 export default function Deploy() {
   return (
@@ -428,7 +428,7 @@ function Footer() {
       <div className="container footer__inner">
         <div className="footer__brand-row">
           <span className="footer__brand">
-            VIBE<span className="lime">.UI</span>
+            hyper<span className="lime">.lime</span>
           </span>
           <span className="mono-label">© 2026</span>
         </div>
