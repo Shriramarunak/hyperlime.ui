@@ -85,6 +85,8 @@ function Nav({ onToggleTheme, theme, query, onSearch }) {
           )}
         </div>
         <div className="nav__links">
+          <a href="#docs">COMPONENTS</a>
+          <a href="#prompt">PROMPT PACK</a>
           <a href="#customize">CUSTOMIZE</a>
           <a href="#install">INSTALL</a>
           <Button variant="secondary" size="sm" onClick={onToggleTheme} aria-label="Toggle theme">
@@ -345,6 +347,78 @@ const TOKENS = [
   ["--font-sans / --font-mono", "typography"],
 ];
 
+function buildPromptPack(docs) {
+  const lines = [
+    "You are building UI with hyper.lime, a zero-dependency React component library.",
+    "Follow these rules exactly:",
+    "- Import from the package root: import { Button, Card } from \"hyperlime\".",
+    "- Variants use the `variant` prop; sizes use `size` with \"sm\" | \"md\" | \"lg\".",
+    "- Selection inputs are controlled: value/checked + onChange.",
+    "- Form fields share: label, hint, error (error overrides hint), id.",
+    "- Status colors: \"success\" | \"warning\" | \"error\" | \"info\" (Badge/Chip/Toast also \"default\"/\"accent\").",
+    "- Theming is CSS variables: --accent, --bg, --border, --radius-md, etc. Never inline hex colors.",
+    "",
+    "## Components",
+    "",
+  ];
+  for (const cat of docs) {
+    lines.push(`# ${cat.category}`);
+    for (const comp of cat.components) {
+      lines.push("");
+      lines.push(`## ${comp.name}`);
+      lines.push(comp.blurb);
+      if (comp.props?.length) {
+        lines.push(
+          "Props: " +
+            comp.props.map((pr) => `${pr.name} (${pr.type}${pr.def && pr.def !== "—" ? `, default ${pr.def}` : ""})`).join("; ")
+        );
+      }
+      const demo = comp.demos[0];
+      if (demo) {
+        lines.push("Example:");
+        lines.push(demo.code);
+      }
+    }
+  }
+  return lines.join("\n");
+}
+
+function PromptPack() {
+  const pack = useMemo(() => buildPromptPack(DOCS), []);
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(pack);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+  return (
+    <section id="prompt" className="section">
+      <div className="container prompt">
+        <div className="prompt__intro">
+          <h2 className="section__title section__title--left">
+            Prompt pack<span className="lime">.</span>
+          </h2>
+          <p>
+            One block containing the entire hyper.lime API — every component, prop, and default.
+            Paste it into Cursor, Claude, or ChatGPT and the model writes correct hyper.lime
+            markup on the first try. It is generated live from these docs, so it never drifts.
+          </p>
+          <p className="mono-label note__aside">
+            MACHINES READ IT TOO: <a href="/llms.txt" className="prompt__link">/llms.txt</a>
+          </p>
+          <Button onClick={copy}>{copied ? "Copied to clipboard" : "Copy prompt pack"}</Button>
+          <p className="prompt__stats mono-label">
+            {pack.split("\n").length} LINES · {pack.length.toLocaleString()} CHARS · {DOCS.reduce((n, c) => n + c.components.length, 0)} COMPONENTS
+          </p>
+        </div>
+        <CodeBlock code={pack} filename="hyperlime-prompt.txt" />
+      </div>
+    </section>
+  );
+}
+
 function Customize({ accent, onSelectAccent }) {
   const [radius, setRadius] = useState(12);
   useEffect(() => {
@@ -433,7 +507,8 @@ function Footer() {
           <span className="mono-label">© 2026</span>
         </div>
         <p className="footer__disclaimer mono-label">
-          INDEPENDENT PROJECT · NO AFFILIATION WITH ANY AI LAB · THIS PAGE WAS BUILT WITH ITSELF, OBVIOUSLY
+          INDEPENDENT PROJECT · NO AFFILIATION WITH ANY AI LAB · THIS PAGE WAS BUILT WITH ITSELF, OBVIOUSLY ·{" "}
+          <a href="/llms.txt" style={{ color: "var(--accent)" }}>LLMS.TXT</a>
         </p>
       </div>
     </footer>
@@ -463,6 +538,7 @@ export default function App() {
       <Hero total={DOCS.reduce((n, c) => n + c.components.length, 0)} />
       <Marquee />
       <Docs query={query} selected={selected} onSelect={setSelected} />
+      <PromptPack />
       <Customize accent={accent} onSelectAccent={setAccent} />
       <Install />
       <Footer />

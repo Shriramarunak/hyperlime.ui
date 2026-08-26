@@ -1,0 +1,278 @@
+# hyper.lime
+
+> Open-source React UI component library for AI-generated ("vibe-coded") apps. Zero runtime dependencies beyond React. All styling is plain CSS with CSS variables. Class names are stable and prefixed with `vb-`.
+
+Install: `npm i hyperlime` (peer dependency: react >= 18)
+
+## Conventions (follow these exactly)
+
+- Every component accepts standard HTML/React props via spread (`onClick`, `style`, `aria-*`, `data-*`).
+- Variants always use the `variant` prop. Sizes always use the `size` prop with values `"sm" | "md" | "lg"`.
+- Selection inputs (`Checkbox`, `Switch`, `RadioGroup`, `Slider`, `Rating`, `ToggleButtonGroup`, `NumberField`, `Pagination`, `BottomNavigation`, `Tabs`, `ToggleButtonGroup`) are controlled: pass `value`/`checked` + `onChange`.
+- Form fields (`Input`, `Textarea`, `Select`, `Autocomplete`, `NumberField`) share: `label?: string`, `hint?: string`, `error?: string` (error overrides hint and turns red), `id?: string` (links label to field).
+- Status colors always use: `"success" | "warning" | "error" | "info"` (Badge/Chip/Toast also accept `"default"` and `"accent"`).
+- Theming is CSS variables: `--accent`, `--bg`, `--bg-elevated`, `--bg-hover`, `--border`, `--border-strong`, `--text`, `--text-muted`, `--text-faint`, `--radius-sm|md|lg`, `--font-sans`, `--font-mono`. Dark mode is `[data-theme="light"]` on `<html>` (default is dark).
+- Import anything from the package root: `import { Button, Card } from "hyperlime"`.
+
+## Inputs
+
+### Button
+Pill-shaped action button.
+Props: `variant: "primary" | "secondary" | "ghost" | "danger" = "primary"`, `size: "sm" | "md" | "lg" = "md"`, `disabled?: boolean`, `children: node`, `...button props`.
+```jsx
+<Button variant="secondary" size="lg">Cancel</Button>
+<Button><Spinner /> Loading</Button>
+```
+
+### IconButton
+Square icon-only button. Requires `label` (used as aria-label).
+Props: `variant?: "default" | "accent" = "default"`, `size?: "sm" | "md" = "md"`, `label: string`, `children: node`.
+```jsx
+<IconButton label="Delete"><Icon name="trash" /></IconButton>
+```
+
+### ButtonGroup
+Joins Buttons into one segmented control.
+Props: `children: node` (two or more `<Button>`).
+```jsx
+<ButtonGroup><Button variant="secondary">Left</Button><Button variant="secondary">Right</Button></ButtonGroup>
+```
+
+### Fab (Floating Action Button)
+56px circular accent button.
+Props: `icon?: node = "+"`, `label: string`, `onClick?: fn`.
+```jsx
+<Fab icon="+" label="Create" onClick={create} />
+```
+
+### SpeedDial
+Fab that expands into labeled mini actions.
+Props: `actions: { label: string, icon: node, onSelect?: fn }[]`.
+```jsx
+<SpeedDial actions={[{ label: "Upload", icon: "↑", onSelect: upload }]} />
+```
+
+### Input (Text Field)
+Labeled text input.
+Props: `label?: string`, `hint?: string`, `error?: string`, `id?: string`, `...input props` (placeholder, value, onChange, type, defaultValue).
+```jsx
+<Input label="Email" placeholder="ada@lovelace.dev" hint="We never share your email." />
+<Input label="API key" error="Invalid key format." />
+```
+
+### Textarea
+Multi-line input. Props: same as Input. `rows?: number = 3`.
+```jsx
+<Textarea label="Prompt" placeholder="Describe what to build..." />
+```
+
+### TextareaAutosize
+Auto-growing textarea. Props: `minRows?: number = 2`, `maxRows?: number = 10`, `...textarea props`.
+
+### Select
+Native styled dropdown.
+Props: `options: string[] = []`, `label?: string`, `id?: string`, `...select props` (value, onChange).
+```jsx
+<Select label="Region" options={["eu-1", "us-1", "ap-1"]} />
+```
+
+### Autocomplete
+Text input with a filtered suggestion panel.
+Props: `options: string[] = []`, `label?: string`, `placeholder?: string`, `id?: string`.
+
+### NumberField
+Number input with +/- steppers.
+Props: `label?: string`, `value: number`, `onChange: (n: number) => void`, `min?: number = 0`, `max?: number = 100`, `step?: number = 1`, `id?: string`.
+
+### Checkbox
+Props: `label?: string`, `checked: boolean`, `onChange: fn`, `id?: string`.
+```jsx
+<Checkbox id="nl" label="Subscribe" checked={on} onChange={() => setOn(!on)} />
+```
+
+### RadioGroup
+Props: `name: string` (required), `options: string[]` (required), `value: string`, `onChange: (v: string) => void`.
+
+### Switch
+Toggle. Props: `checked: boolean`, `onChange: fn`, `label?: string`, `id?: string`.
+
+### Slider
+Props: `value: number = 0`, `onChange: (n: number) => void`, `min?: number = 0`, `max?: number = 100`, `label?: string` (shows live readout).
+
+### Rating
+Star rating. Props: `value: number = 0`, `onChange: (n: number) => void`, `max?: number = 5`.
+
+### ToggleButtonGroup
+Segmented single/multi select.
+Props: `options: string[]` (required), `value: string | string[]`, `onChange: fn`, `multiple?: boolean = false` (value is an array when true).
+
+### TransferList
+Dual-list with move buttons. Props: `items: string[]` (starts in left list).
+
+## Data display
+
+### Avatar
+Props: `initials: string`, `size?: "sm" | "md" | "lg" = "md"`.
+
+### Badge
+Status pill.
+Props: `variant: "default" | "accent" | "success" | "warning" | "error" = "default"`, `dot?: boolean = false`, `children: node`.
+```jsx
+<Badge variant="success" dot>deployed</Badge>
+```
+
+### Chip
+Tag, optionally removable.
+Props: `variant?: "default" | "accent" = "default"`, `onRemove?: fn` (shows ✕ when set), `children: node`.
+
+### Divider
+`<hr />` hairline. No props.
+
+### Icon
+Stroke-based inline SVG, inherits currentColor.
+Props: `name: string` (required), `size?: number = 20`.
+Names: search, plus, minus, check, close, arrowRight, arrowLeft, chevronDown, trash, edit, download, settings, user, home, bell, copy, star. Import `ICON_NAMES` for the full list.
+```jsx
+<Icon name="search" size={16} />
+```
+
+### ImageList
+Grid of gradient tiles. Props: `items: { label: string, hue: number }[]`, `columns?: number = 3`.
+
+### Kbd
+Keyboard key cap. Props: `children: node` (e.g. `⌘`).
+
+### List / ListItem
+```jsx
+<List><ListItem selected secondary="42s" onClick={fn}>web-prod</ListItem></List>
+```
+ListItem props: `selected?: boolean`, `secondary?: string`, `onClick?: fn`, `children: node`.
+
+### Skeleton
+Shimmer placeholder. Props: `width?: number | string = "100%"`, `height?: number = 14`, `style?: object`.
+
+### Table
+Props: `columns: string[]` (required), `rows: any[][]` (required).
+```jsx
+<Table columns={["Name", "Status"]} rows={[["web-prod", "running"]]} />
+```
+
+### Tooltip
+Props: `label: string` (required), `children: node` (required, the trigger).
+```jsx
+<Tooltip label="Neon, as promised"><Button>Hover me</Button></Tooltip>
+```
+
+### Typography
+Props: `variant?: "h1"|"h2"|"h3"|"h4"|"h5"|"h6"|"subtitle"|"body1"|"body2"|"caption"|"mono" = "body1"`, `as?: string` (override tag).
+
+## Feedback
+
+### Alert
+Props: `variant?: "info" | "success" | "warning" | "error" = "info"`, `title?: string`, `children: node`.
+
+### Backdrop
+Full-screen blurred overlay. Props: `open: boolean`, `onClose?: fn`, `children: node`.
+
+### Dialog (alias: Modal)
+Modal with header/footer; closes on Esc and outside click. Portals to document.body.
+Props: `open: boolean`, `onClose: fn`, `title?: string`, `footer?: node`, `children: node`.
+```jsx
+<Dialog open={open} onClose={close} title="Delete?" footer={<Button variant="danger">Delete</Button>}>No undo.</Dialog>
+```
+
+### Progress
+Props: `value?: number = 0` (0–100).
+
+### Toast (alias: Snackbar)
+Transient notification.
+Props: `variant?: "default" | "success" | "warning" | "error" | "info" = "default"`, `title: string`, `description?: string`, `onClose?: fn`.
+
+### Spinner
+Indeterminate loader. No props.
+
+## Surfaces
+
+### Accordion
+Props: `items: { title: string, content: node }[] = []`, `allowMultiple?: boolean = false`.
+
+### AppBar
+Top bar container. Props: `children: node`, `style?: object`.
+
+### Card
+Props: `title?: string`, `description?: string`, `footer?: node`, `hoverable?: boolean = false`, `children?: node`.
+```jsx
+<Card title="Pro plan" description="For teams" hoverable footer={<Button size="sm">Upgrade</Button>}>Unlimited projects</Card>
+```
+
+### Paper
+Props: `elevation?: number = 0` (0–4 shadow depth), `children: node`.
+
+### EmptyState
+Props: `icon?: string = "◇"`, `title: string`, `description?: string`, `action?: node`.
+
+## Navigation
+
+### BottomNavigation
+Props: `items: { label: string, icon: node }[]`, `value: string`, `onChange: (v: string) => void`.
+
+### Breadcrumb
+Props: `items: string[]` (last item = current page).
+
+### Drawer
+Side panel. Props: `open: boolean`, `onClose: fn`, `side?: "left" | "right" = "left"`, `title?: string`, `children: node`.
+
+### Link
+Props: `href?: string = "#"`, `accent?: boolean = false`, `children: node`.
+
+### Menu
+Dropdown. Props: `trigger: node`, `items: { label: string, icon?: node }[]`, `onSelect?: (label: string) => void`.
+
+### Pagination
+Props: `page: number`, `pageCount: number`, `onChange: (p: number) => void`.
+
+### Stepper
+Props: `steps: string[]`, `current?: number = 0`.
+
+### Tabs
+Props: `tabs: { label: string, content: node }[]`, `initial?: number = 0`.
+
+## Layout
+
+### Box
+Plain div passthrough.
+
+### Container
+Props: `maxWidth?: number = 1100`.
+
+### Grid
+Props: `columns?: number = 2`, `spacing?: number = 2` (gap in 8px units).
+
+### Stack
+Props: `direction?: "row" | "column" = "column"`, `spacing?: number = 2`.
+
+## Utils
+
+### ClickAwayListener
+Props: `onClickAway: fn`, `children: node`.
+
+### Popover (alias: Popper)
+Props: `trigger: node`, `children: node`.
+
+### Portal
+Renders children into document.body. Props: `children: node`.
+
+### Transitions
+`<Fade show>`, `<Collapse show>`, `<Slide show direction>` — Props: `show?: boolean = true`, `duration?: number = 250`, Slide also `direction?: "up"|"down"|"left"|"right" = "up"`.
+
+### NoSsr
+Renders children after mount only. Props: `children: node`.
+
+### useMediaQuery
+Hook. `const narrow = useMediaQuery("(max-width: 720px)")`.
+
+### InitColorSchemeScript
+Inline script component; put in `<body>` of index.html to restore saved theme before paint.
+
+### CssBaseline
+No-op; the global reset ships in the library CSS.

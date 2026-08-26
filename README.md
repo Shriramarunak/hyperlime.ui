@@ -44,6 +44,11 @@ All components read from CSS variables — override them globally or at runtime:
 }
 ```
 
+## AI-ready
+
+- public/llms.txt — full component API reference in LLM-friendly markdown, served at /llms.txt
+- **Prompt Pack** — one copy-paste block with the entire API, generated live from the docs at / (#prompt)
+
 ## License
 
 MIT
