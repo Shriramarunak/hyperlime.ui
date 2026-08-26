@@ -40,3 +40,7 @@
   padding: 16px 24px;
   border-top: 1px solid var(--border);
 }
+
+.vb-card--accent {
+  border-top: 2px solid var(--accent);
+}

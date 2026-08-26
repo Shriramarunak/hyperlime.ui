@@ -276,3 +276,59 @@ Inline script component; put in `<body>` of index.html to restore saved theme be
 
 ### CssBaseline
 No-op; the global reset ships in the library CSS.
+
+## AI
+
+### Chat (ChatBubble, TypingIndicator)
+Chat thread container. Wrap in `aria-live="polite"` for announcements.
+ChatBubble props: `variant?: "user" | "assistant" = "assistant"`, `time?: string`, `children: node`. TypingIndicator takes no props.
+```jsx
+<Chat>
+  <ChatBubble variant="user" time="14:02">Deploy to prod</ChatBubble>
+  <ChatBubble variant="assistant" time="14:02">Build #421 passed.</ChatBubble>
+  <TypingIndicator />
+</Chat>
+```
+
+### CommandPalette
+⌘K launcher with keyboard nav (↑↓ ↵ Esc).
+Props: `open: boolean`, `onClose: fn`, `commands: { label, icon?, hint?, onSelect? }[] = []`, `placeholder?: string`.
+```jsx
+<CommandPalette open={open} onClose={close}
+  commands={[{ label: "Deploy", icon: "↑", hint: "⇧D", onSelect: deploy }]} />
+```
+
+## Blocks (extended)
+
+### AvatarGroup
+Props: `people: { initials: string }[]`, `max?: number = 3` (then shows +N).
+
+### Stat
+Metric card. Props: `label: string`, `value: string`, `delta?: string`, `trend?: "up" | "down" = "up"`.
+
+### Timeline
+Props: `items: { title, description?, time?, color?: "accent"|"green"|"red"|"muted" }[]`.
+
+### Sparkline
+Props: `data: number[]`, `width?: number = 120`, `height?: number = 36`, `color?: "lime"|"green"|"red"|"blue" = "lime"`, `area?: boolean = false`.
+
+### Banner
+Announcement strip. Props: `variant?: "accent" | "dark" = "accent"`, `onClose?: fn`, `children: node`.
+
+### OTPInput
+Props: `length?: number = 6`, `value: string`, `onChange: fn`, `onComplete?: fn`.
+
+### TagInput
+Props: `tags: string[]`, `onChange: fn`, `placeholder?: string`. Enter/comma adds; Backspace removes.
+
+### FileUpload
+Props: `onFiles?: (files: FileList) => void`, `accept?: string`, `multiple?: boolean = true`, `title?/hint?: string`.
+
+### ProgressRing
+Props: `value?: number = 0`, `size?: number = 72`, `stroke?: number = 6`, `color?: string = "var(--accent)"`, `showValue?: boolean = true`.
+
+## Extended props on existing components
+
+- Input: `leading?: ReactNode`, `trailing?: ReactNode` — adornments inside a joined wrapper.
+- Alert: `onClose?: fn` — renders a labelled ✕ button.
+- Card: `accent?: boolean` — lime top border.

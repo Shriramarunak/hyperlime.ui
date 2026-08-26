@@ -56,3 +56,7 @@ export { useMediaQuery, useClickAway } from "./hooks";
 export { Fade, Collapse, Slide } from "./Transitions";
 export type { TransitionProps, SlideProps } from "./Transitions";
 export { NoSsr, CssBaseline, InitColorSchemeScript } from "./Utils";
+export { AvatarGroup, ProgressRing, Stat, Timeline, Sparkline, Banner } from "./Blocks";
+export type { AvatarGroupProps, ProgressRingProps, StatProps, TimelineProps, TimelineItem, SparklineProps, BannerProps } from "./Blocks";
+export { ChatBubble, TypingIndicator, Chat, OTPInput, TagInput, FileUpload, CommandPalette } from "./AI";
+export type { ChatBubbleProps, ChatProps, OTPInputProps, TagInputProps, FileUploadProps, CommandPaletteProps, Command } from "./AI";

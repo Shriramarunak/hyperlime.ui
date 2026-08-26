@@ -1810,3 +1810,6 @@ and var(--ease-spring) tokens`,
     ],
   },
 ];
+
+import { extendDocs } from "./docsExtend";
+extendDocs(DOCS);

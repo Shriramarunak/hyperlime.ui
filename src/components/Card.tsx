@@ -6,14 +6,15 @@ export interface CardProps {
   description?: string;
   footer?: ReactNode;
   hoverable?: boolean;
+  accent?: boolean;
   children?: ReactNode;
   style?: CSSProperties;
 }
 
-export default function Card({ title, description, footer, hoverable, children, style }: CardProps) {
+export default function Card({ title, description, footer, hoverable, accent, children, style }: CardProps) {
   return (
     <div
-      className={`vb-card ${hoverable ? "vb-card--hoverable" : ""}`}
+      className={`vb-card ${hoverable ? "vb-card--hoverable" : ""} ${accent ? "vb-card--accent" : ""}`}
       style={style}
     >
       {(title || description) && (

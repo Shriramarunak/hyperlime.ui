@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
 import "./../styles/input.css";
 
 export interface FieldProps {
@@ -8,10 +8,23 @@ export interface FieldProps {
   id?: string;
 }
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement>, FieldProps {}
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement>, FieldProps {
+  leading?: ReactNode;
+  trailing?: ReactNode;
+}
 
-export default function Input({ label, hint, error, id, ...props }: InputProps) {
+export default function Input({ label, hint, error, id, leading, trailing, ...props }: InputProps) {
   const hintId = id ? `${id}-hint` : undefined;
+  const wrapped = !!(leading || trailing);
+  const input = (
+    <input
+      id={id}
+      className={`vb-input ${error ? "vb-input--error" : ""}`}
+      aria-invalid={!!error || undefined}
+      aria-describedby={error || hint ? hintId : undefined}
+      {...props}
+    />
+  );
   return (
     <div className="vb-field">
       {label && (
@@ -19,18 +32,20 @@ export default function Input({ label, hint, error, id, ...props }: InputProps) 
           {label}
         </label>
       )}
-      <input
-        id={id}
-        className={`vb-input ${error ? "vb-input--error" : ""}`}
-        aria-invalid={!!error || undefined}
-        aria-describedby={error || hint ? hintId : undefined}
-        {...props}
-      />
-      {(error || hint) && (
-        <span
-          id={hintId}
-          className={`vb-field__hint ${error ? "vb-field__hint--error" : ""}`}
+      {wrapped ? (
+        <div
+          className={`vb-inputwrap ${error ? "vb-inputwrap--error" : ""}`}
+          onClick={(e) => e.currentTarget.querySelector("input")?.focus()}
         >
+          {leading && <span className="vb-inputwrap__adorn">{leading}</span>}
+          {input}
+          {trailing && <span className="vb-inputwrap__adorn vb-inputwrap__adorn--end">{trailing}</span>}
+        </div>
+      ) : (
+        input
+      )}
+      {(error || hint) && (
+        <span id={hintId} className={`vb-field__hint ${error ? "vb-field__hint--error" : ""}`}>
           {error || hint}
         </span>
       )}

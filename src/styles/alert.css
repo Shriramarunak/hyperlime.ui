@@ -46,3 +46,18 @@
   border-color: rgba(255, 107, 129, 0.3);
   color: var(--red);
 }
+
+.vb-alert__close {
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+
+.vb-alert__close:hover {
+  opacity: 1;
+}

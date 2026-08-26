@@ -13,17 +13,27 @@ const icons: Record<AlertVariant, string> = {
 export interface AlertProps {
   variant?: AlertVariant;
   title?: string;
+  onClose?: () => void;
   children?: ReactNode;
 }
 
-export default function Alert({ variant = "info", title, children }: AlertProps) {
+export default function Alert({ variant = "info", title, onClose, children }: AlertProps) {
   return (
     <div className={`vb-alert vb-alert--${variant}`} role="alert">
       <span className="vb-alert__icon">{icons[variant]}</span>
-      <div>
+      <div style={{ flex: 1 }}>
         {title && <div className="vb-alert__title">{title}</div>}
         <div className="vb-alert__content">{children}</div>
       </div>
+      {onClose && (
+        <button
+          className="vb-alert__close"
+          onClick={onClose}
+          aria-label="Dismiss"
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 }
