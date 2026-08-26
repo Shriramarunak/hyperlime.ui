@@ -1,0 +1,47 @@
+.vb-accordion {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.vb-accordion__item + .vb-accordion__item {
+  border-top: 1px solid var(--border);
+}
+
+.vb-accordion__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: left;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.vb-accordion__trigger:hover {
+  background: var(--bg-hover);
+}
+
+.vb-accordion__icon {
+  color: var(--accent);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.vb-accordion__icon--open {
+  transform: rotate(45deg);
+}
+
+.vb-accordion__content {
+  padding: 0 20px 16px;
+  font-size: 14px;
+  color: var(--text-muted);
+}

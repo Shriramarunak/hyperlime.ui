@@ -11,6 +11,8 @@
   --accent-hover: #e4ff4d;
   --accent-subtle: rgba(214, 243, 47, 0.12);
   --on-accent: #0c0c07;
+  --shadow: rgba(0, 0, 0, 0.5);
+  --overlay: rgba(0, 0, 0, 0.7);
   --green: #3ddc97;
   --yellow: #ffc857;
   --red: #ff6b81;
@@ -21,6 +23,20 @@
   --radius-full: 999px;
   --font-sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+[data-theme="light"] {
+  --bg: #fafaf3;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f0f0e6;
+  --border: #e5e5d8;
+  --border-strong: #ccccbb;
+  --text: #16160e;
+  --text-muted: #5d5d50;
+  --text-faint: #90907f;
+  --accent-subtle: rgba(160, 190, 10, 0.14);
+  --shadow: rgba(20, 20, 0, 0.1);
+  --overlay: rgba(40, 40, 30, 0.45);
 }
 
 * {
@@ -39,6 +55,7 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
