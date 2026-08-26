@@ -16,9 +16,9 @@
 }
 
 .vb-badge--accent {
-  background: var(--accent-subtle);
-  color: var(--accent-hover);
-  border: 1px solid rgba(124, 108, 255, 0.35);
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
 }
 
 .vb-badge--success {

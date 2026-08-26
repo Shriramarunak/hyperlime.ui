@@ -52,7 +52,7 @@
 
 .vb-progress__bar {
   height: 100%;
-  background: linear-gradient(90deg, #7c6cff, #9484ff);
+  background: var(--accent);
   border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
@@ -66,8 +66,8 @@
   border-radius: 50%;
   font-size: 14px;
   font-weight: 700;
-  color: white;
-  background: linear-gradient(135deg, #7c6cff, #4cc9f0);
+  color: var(--on-accent);
+  background: var(--accent);
   flex-shrink: 0;
 }
 
@@ -91,7 +91,6 @@
   border-radius: 50%;
   animation: vb-spin 0.7s linear infinite;
 }
-
 @keyframes vb-spin {
   to {
     transform: rotate(360deg);

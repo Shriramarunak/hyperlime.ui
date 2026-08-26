@@ -1,15 +1,16 @@
 :root {
-  --bg: #0a0a0f;
-  --bg-elevated: #12121a;
-  --bg-hover: #1a1a26;
-  --border: #23233a;
-  --border-strong: #34345a;
-  --text: #e8e8f0;
-  --text-muted: #9a9ab5;
-  --text-faint: #63637f;
-  --accent: #7c6cff;
-  --accent-hover: #9484ff;
-  --accent-subtle: rgba(124, 108, 255, 0.14);
+  --bg: #0c0c07;
+  --bg-elevated: #12120c;
+  --bg-hover: #1b1b13;
+  --border: #26261a;
+  --border-strong: #3a3a2a;
+  --text: #f2f2ea;
+  --text-muted: #9d9d8e;
+  --text-faint: #67675c;
+  --accent: #d6f32f;
+  --accent-hover: #e4ff4d;
+  --accent-subtle: rgba(214, 243, 47, 0.12);
+  --on-accent: #0c0c07;
   --green: #3ddc97;
   --yellow: #ffc857;
   --red: #ff6b81;
@@ -18,7 +19,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-full: 999px;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
@@ -42,7 +43,7 @@ body {
 
 ::selection {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 
 .container {

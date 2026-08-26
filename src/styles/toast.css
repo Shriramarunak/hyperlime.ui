@@ -1,0 +1,61 @@
+.vb-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 280px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: vb-toast-in 0.22s ease;
+}
+
+.vb-toast__accent {
+  align-self: stretch;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.vb-toast__accent--success {
+  background: var(--green);
+}
+
+.vb-toast__accent--error {
+  background: var(--red);
+}
+
+.vb-toast__title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.vb-toast__description {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.vb-toast__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px;
+}
+
+.vb-toast__close:hover {
+  color: var(--text);
+}
+
+@keyframes vb-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
