@@ -1,0 +1,52 @@
+:root {
+  --bg: #0a0a0f;
+  --bg-elevated: #12121a;
+  --bg-hover: #1a1a26;
+  --border: #23233a;
+  --border-strong: #34345a;
+  --text: #e8e8f0;
+  --text-muted: #9a9ab5;
+  --text-faint: #63637f;
+  --accent: #7c6cff;
+  --accent-hover: #9484ff;
+  --accent-subtle: rgba(124, 108, 255, 0.14);
+  --green: #3ddc97;
+  --yellow: #ffc857;
+  --red: #ff6b81;
+  --blue: #4cc9f0;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}

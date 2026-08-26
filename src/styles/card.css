@@ -1,0 +1,42 @@
+.vb-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.vb-card--hoverable:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.vb-card__header {
+  padding: 20px 24px 0;
+}
+
+.vb-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.vb-card__description {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.vb-card__body {
+  padding: 16px 24px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.vb-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}

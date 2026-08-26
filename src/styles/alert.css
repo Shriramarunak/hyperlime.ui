@@ -1,0 +1,48 @@
+.vb-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  border: 1px solid;
+}
+
+.vb-alert__icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.vb-alert__title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.vb-alert__content {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.vb-alert--info {
+  background: rgba(76, 201, 240, 0.08);
+  border-color: rgba(76, 201, 240, 0.3);
+  color: var(--blue);
+}
+
+.vb-alert--success {
+  background: rgba(61, 220, 151, 0.08);
+  border-color: rgba(61, 220, 151, 0.3);
+  color: var(--green);
+}
+
+.vb-alert--warning {
+  background: rgba(255, 200, 87, 0.08);
+  border-color: rgba(255, 200, 87, 0.3);
+  color: var(--yellow);
+}
+
+.vb-alert--error {
+  background: rgba(255, 107, 129, 0.08);
+  border-color: rgba(255, 107, 129, 0.3);
+  color: var(--red);
+}

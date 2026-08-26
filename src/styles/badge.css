@@ -1,0 +1,48 @@
+.vb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  line-height: 1.4;
+}
+
+.vb-badge--default {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.vb-badge--accent {
+  background: var(--accent-subtle);
+  color: var(--accent-hover);
+  border: 1px solid rgba(124, 108, 255, 0.35);
+}
+
+.vb-badge--success {
+  background: rgba(61, 220, 151, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(61, 220, 151, 0.3);
+}
+
+.vb-badge--warning {
+  background: rgba(255, 200, 87, 0.12);
+  color: var(--yellow);
+  border: 1px solid rgba(255, 200, 87, 0.3);
+}
+
+.vb-badge--error {
+  background: rgba(255, 107, 129, 0.12);
+  color: var(--red);
+  border: 1px solid rgba(255, 107, 129, 0.3);
+
+}
+
+.vb-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
