@@ -1,0 +1,139 @@
+.vb-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.vb-menu__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 60;
+  min-width: 200px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px var(--shadow);
+  padding: 6px;
+  animation: vb-menu-in 0.15s ease;
+}
+
+.vb-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--text-muted);
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.vb-menu__item:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.vb-menu__icon {
+  color: var(--accent);
+  display: inline-flex;
+}
+
+@keyframes vb-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.vb-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: var(--overlay);
+  backdrop-filter: blur(4px);
+  animation: vb-fade-in 0.2s ease;
+}
+
+.vb-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 901;
+  width: min(320px, 85vw);
+  background: var(--bg-elevated);
+  transition: transform 0.25s ease;
+}
+
+.vb-drawer--left {
+  left: 0;
+  border-right: 1px solid var(--border-strong);
+  transform: translateX(-100%);
+}
+
+.vb-drawer--right {
+  right: 0;
+  border-left: 1px solid var(--border-strong);
+  transform: translateX(100%);
+}
+
+.vb-drawer--open {
+  transform: translateX(0);
+}
+
+.vb-bottomnav {
+  display: flex;
+  justify-content: space-around;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+}
+
+.vb-bottomnav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 10px 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.vb-bottomnav__item:hover {
+  color: var(--text-muted);
+  background: var(--bg-hover);
+}
+
+.vb-bottomnav__item--active {
+  color: var(--accent);
+}
+
+.vb-bottomnav__icon {
+  font-size: 16px;
+}
+
+.vb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: var(--overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: vb-fade-in 0.2s ease;
+}

@@ -27,6 +27,14 @@
   background: var(--red);
 }
 
+.vb-toast__accent--warning {
+  background: var(--yellow);
+}
+
+.vb-toast__accent--info {
+  background: var(--blue);
+}
+
 .vb-toast__title {
   font-size: 14px;
   font-weight: 700;

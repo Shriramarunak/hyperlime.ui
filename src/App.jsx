@@ -1,30 +1,6 @@
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Badge,
-  Card,
-  Alert,
-  Input,
-  Textarea,
-  Switch,
-  Progress,
-  Avatar,
-  Spinner,
-  Tabs,
-  Modal,
-  Tooltip,
-  Toast,
-  Select,
-  Accordion,
-  Table,
-  Pagination,
-  Breadcrumb,
-  Skeleton,
-  Checkbox,
-  RadioGroup,
-  Slider,
-  Kbd,
-} from "./components";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Badge, Card, Input, Kbd, Icon, Slider } from "./components";
+import { DOCS } from "./docsData";
 import "./App.css";
 
 const ACCENTS = [
@@ -36,10 +12,7 @@ const ACCENTS = [
 ];
 
 function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window === "undefined") return "dark";
-    return localStorage.getItem("vb-theme") || "dark";
-  });
+  const [theme, setTheme] = useState(() => localStorage.getItem("vb-theme") || "dark");
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("vb-theme", theme);
@@ -53,10 +26,7 @@ function useAccent() {
     const root = document.documentElement;
     root.style.setProperty("--accent", accent.accent);
     root.style.setProperty("--accent-hover", accent.hover);
-    root.style.setProperty(
-      "--accent-subtle",
-      `color-mix(in srgb, ${accent.accent} 14%, transparent)`
-    );
+    root.style.setProperty("--accent-subtle", `color-mix(in srgb, ${accent.accent} 14%, transparent)`);
   }, [accent]);
   return [accent, setAccent];
 }
@@ -82,36 +52,32 @@ function CodeBlock({ code }) {
   );
 }
 
-function Preview({ name, code, children, span = false }) {
-  const [showCode, setShowCode] = useState(false);
-  return (
-    <div className={`preview ${span ? "preview--span" : ""}`}>
-      <div className="preview__bar">
-        <span className="preview__label mono-label">{name}</span>
-        {code && (
-          <button
-            className="preview__toggle mono-label"
-            onClick={() => setShowCode(!showCode)}
-          >
-            {showCode ? "HIDE CODE" : "</> CODE"}
-          </button>
-        )}
-      </div>
-      {showCode && code ? <CodeBlock code={code} /> : null}
-      <div className="preview__stage">{children}</div>
-    </div>
-  );
-}
-
-function Nav({ onToggleTheme, theme }) {
+function Nav({ onToggleTheme, theme, query, onSearch }) {
   return (
     <nav className="nav">
       <div className="container nav__inner">
         <a href="#" className="nav__logo">
           vibe<span className="lime">.ui</span>
         </a>
+        <div className="nav__search">
+          <Icon name="search" size={15} />
+          <input
+            value={query}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Search components..."
+            aria-label="Search components"
+          />
+          {query ? (
+            <button className="nav__search-clear" onClick={() => onSearch("")} aria-label="Clear search">
+              <Icon name="close" size={13} />
+            </button>
+          ) : (
+            <span className="nav__search-kbd">
+              <Kbd>/</Kbd>
+            </span>
+          )}
+        </div>
         <div className="nav__links">
-          <a href="#components">COMPONENTS</a>
           <a href="#customize">CUSTOMIZE</a>
           <a href="#install">INSTALL</a>
           <Button variant="secondary" size="sm" onClick={onToggleTheme} aria-label="Toggle theme">
@@ -158,55 +124,40 @@ function Hero() {
   return (
     <header className="hero">
       <div className="hero__label mono-label">
-        <span className="dot" /> AN OPEN-SOURCE UI LIBRARY FOR VIBE-CODED APPS
+        <span className="dot" /> {DOCS.reduce((n, c) => n + c.components.length, 0)} COMPONENTS · AN OPEN-SOURCE UI LIBRARY FOR VIBE-CODED APPS
       </div>
       <h1 className="hero__title">Hi, builders.</h1>
       <p className="hero__subtitle">
-        <span className="lime">Zero config.</span> Components that LLMs write
-        correctly on the first try.
+        <span className="lime">Zero config.</span> Components that LLMs write correctly on the first try.
       </p>
-
       <div className="note">
         <p>
-          I asked an AI to build my app and it produced{" "}
-          <strong>working UI</strong> on the first prompt. Total dumb luck — I
-          just like <strong>.ui</strong> libraries.
+          I asked an AI to build my app and it produced <strong>working UI</strong> on the first
+          prompt. Total dumb luck — I just like <strong>.ui</strong> libraries.
         </p>
-        <p className="mono-label note__aside">
-          LEFT IS THE CODE. RIGHT IS THE LIVE RESULT.
-        </p>
+        <p className="mono-label note__aside">LEFT IS THE CODE. RIGHT IS THE LIVE RESULT.</p>
       </div>
-
       <div className="hero__actions">
         <Button size="lg" onClick={() => document.getElementById("install")?.scrollIntoView({ behavior: "smooth" })}>
           npm i vibe-ui
         </Button>
-        <Button variant="secondary" size="lg" onClick={() => document.getElementById("components")?.scrollIntoView({ behavior: "smooth" })}>
+        <Button variant="secondary" size="lg" onClick={() => document.getElementById("docs")?.scrollIntoView({ behavior: "smooth" })}>
           BROWSE COMPONENTS ↓
         </Button>
       </div>
-
       <Playground />
     </header>
   );
 }
 
 function Marquee() {
-  const items = [
-    "ZERO DEPENDENCIES",
-    "MIT LICENSED",
-    "TOKEN-FRIENDLY MARKUP",
-    "LIGHT + DARK",
-    "CSS VARIABLES",
-    "BUILT FOR PROMPTS",
-  ];
-  const strip = [...items, ...items];
+  const items = ["ZERO DEPENDENCIES", "MIT LICENSED", "TOKEN-FRIENDLY MARKUP", "LIGHT + DARK", "CSS VARIABLES", "BUILT FOR PROMPTS"];
   return (
     <div className="marquee" aria-hidden="true">
       <div className="marquee__track">
         {[0, 1].map((half) => (
           <div key={half} className="marquee__half">
-            {strip.map((item, i) => (
+            {items.map((item, i) => (
               <span key={i} className="marquee__item mono-label">{item} ✦</span>
             ))}
           </div>
@@ -216,280 +167,112 @@ function Marquee() {
   );
 }
 
-function Install() {
+function Sidebar({ docs, activeId }) {
   return (
-    <section id="install" className="section install">
-      <div className="container">
-        <h2 className="section__title">
-          Ship in seconds<span className="lime">.</span>
-        </h2>
-        <div className="install-cmd">
-          <code>$ npm i vibe-ui</code>
-          <span className="mono-label">THAT'S THE WHOLE SETUP</span>
+    <aside className="docs__sidebar">
+      {docs.map((cat) => (
+        <div key={cat.category} className="docs__cat">
+          <div className="docs__cat-label mono-label">{cat.category}</div>
+          {cat.components.map((comp) => (
+            <a
+              key={comp.id}
+              href={`#${comp.id}`}
+              className={`docs__link ${activeId === comp.id ? "docs__link--active" : ""}`}
+            >
+              {comp.name}
+            </a>
+          ))}
         </div>
-        <CodeBlock code={`import { Button, Card, Input } from "vibe-ui";
-
-export default function Deploy() {
-  return (
-    <Card title="Deploy to production">
-      <Input label="Branch" placeholder="main" />
-      <Button>Ship it</Button>
-    </Card>
+      ))}
+    </aside>
   );
-}`} />
-        <p className="install__note mono-label">
-          OR PASTE THE IMPORT BLOCK STRAIGHT INTO YOUR AI PROMPT. IT KNOWS WHAT TO DO.
-        </p>
-      </div>
+}
+
+function DocSection({ comp, category }) {
+  return (
+    <section id={comp.id} className="doc">
+      <div className="mono-label doc__cat">{category}</div>
+      <h3 className="doc__name">{comp.name}</h3>
+      <p className="doc__blurb">{comp.blurb}</p>
+      {comp.demos.map((demo) => (
+        <div key={demo.title} className="doc__demo">
+          <div className="mono-label doc__demo-label">{demo.title}</div>
+          <div className="doc__demo-stage">{demo.node}</div>
+        </div>
+      ))}
+      <CodeBlock code={comp.code} />
     </section>
   );
 }
 
-function ModalDemo({ open, onClose }) {
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title="Delete deployment?"
-      footer={
-        <>
-          <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
-          <Button variant="danger" size="sm" onClick={onClose}>Delete</Button>
-        </>
-      }
-    >
-      This will tear down <strong style={{ color: "var(--text)" }}>prod-eu-1</strong>.
-      There is no undo. There never is.
-    </Modal>
-  );
-}
+function Docs({ query }) {
+  const [activeId, setActiveId] = useState("");
+  const q = query.trim().toLowerCase();
 
-function ToastDemo() {
-  const [visible, setVisible] = useState(false);
+  const filtered = useMemo(
+    () =>
+      DOCS.map((cat) => ({
+        ...cat,
+        components: q
+          ? cat.components.filter(
+              (c) =>
+                c.name.toLowerCase().includes(q) ||
+                c.blurb.toLowerCase().includes(q) ||
+                cat.category.toLowerCase().includes(q)
+            )
+          : cat.components,
+      })).filter((cat) => cat.components.length > 0),
+    [q]
+  );
+
+  const total = filtered.reduce((n, c) => n + c.components.length, 0);
+
   useEffect(() => {
-    if (!visible) return;
-    const t = setTimeout(() => setVisible(false), 3200);
-    return () => clearTimeout(t);
-  }, [visible]);
-  return (
-    <>
-      <Button size="sm" onClick={() => setVisible(true)}>Trigger toast</Button>
-      {visible && (
-        <div className="toast-anchor">
-          <Toast
-            title="Deployment queued"
-            description="prod-eu-1 · rolling out now"
-            onClose={() => setVisible(false)}
-          />
-        </div>
-      )}
-    </>
-  );
-}
-
-const SNIPPETS = {
-  buttons: `<Button>Primary</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="danger">Danger</Button>
-<Button disabled>Disabled</Button>
-<Button><Spinner /> Loading</Button>`,
-  badges: `<Badge>default</Badge>
-<Badge variant="accent">v2.0</Badge>
-<Badge variant="success" dot>deployed</Badge>
-<Tooltip label="Neon, as promised">
-  <Button variant="secondary" size="sm">Hover me</Button>
-</Tooltip>`,
-  tabs: `const tabs = [
-  { label: "Preview", content: "Live preview." },
-  { label: "Logs", content: "build finished in 42s" },
-];
-
-<Tabs tabs={tabs} initial={0} />`,
-  inputs: `<Input label="Email" placeholder="ada@lovelace.dev"
-       hint="We never share your email." />
-
-<Input label="API key" error="Invalid key format." />
-
-<Textarea label="Prompt" placeholder="Describe it..." />
-
-<Select label="Region" options={["eu-1", "us-1"]} />`,
-};
-
-function Gallery() {
-  const [plan, setPlan] = useState("Hobby");
-  const [temp, setTemp] = useState(70);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [newsletter, setNewsletter] = useState(true);
-  const [page, setPage] = useState(2);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveId(e.target.id);
+        });
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+    filtered.forEach((cat) =>
+      cat.components.forEach((comp) => {
+        const el = document.getElementById(comp.id);
+        if (el) observer.observe(el);
+      })
+    );
+    return () => observer.disconnect();
+  }, [filtered]);
 
   return (
-    <section id="components" className="section">
-      <div className="container">
-        <h2 className="section__title">
-          Components<span className="lime">,</span> live
-        </h2>
-
-        <div className="preview-grid">
-          <Preview name="Buttons" code={SNIPPETS.buttons}>
-            <div className="row wrap">
-              <Button>Primary</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="ghost">Ghost</Button>
-              <Button variant="danger">Danger</Button>
-              <Button disabled>Disabled</Button>
-              <Button><Spinner /> Loading</Button>
+    <section id="docs" className="docs">
+      <div className="docs__layout container">
+        <Sidebar docs={filtered} activeId={activeId} />
+        <div className="docs__content">
+          {q && (
+            <div className="mono-label docs__results">
+              {total} RESULT{total === 1 ? "" : "S"} FOR "{query.toUpperCase()}"
             </div>
-          </Preview>
-
-          <Preview name="Badges & tooltips" code={SNIPPETS.badges}>
-            <div className="row wrap">
-              <Badge>default</Badge>
-              <Badge variant="accent">v2.0</Badge>
-              <Badge variant="success" dot>deployed</Badge>
-              <Badge variant="warning" dot>pending</Badge>
-              <Badge variant="error" dot>failed</Badge>
-              <Tooltip label="Neon, as promised">
-                <Button variant="secondary" size="sm">Hover me</Button>
-              </Tooltip>
-            </div>
-          </Preview>
-
-          <Preview name="Tabs" code={SNIPPETS.tabs}>
-            <Tabs
-              tabs={[
-                { label: "Preview", content: "Live preview of your app." },
-                { label: "Logs", content: "▸ build finished in 42s" },
-                { label: "Settings", content: "Region: eu-1 · Tier: free" },
-              ]}
-            />
-          </Preview>
-
-          <Preview name="Inputs" code={SNIPPETS.inputs}>
-            <Input id="email-demo" label="Email" placeholder="ada@lovelace.dev" hint="We never share your email." />
-            <div style={{ height: 16 }} />
-            <Input id="err-demo" label="API key" defaultValue="sk-live-0000" error="Invalid key format." />
-          </Preview>
-
-          <Preview name="Textarea & select" code={SNIPPETS.inputs}>
-            <Textarea id="ta-demo" label="Prompt" placeholder="Describe what you want to build..." />
-            <div style={{ height: 16 }} />
-            <Select id="region-demo" label="Region" options={["eu-1 (Frankfurt)", "us-1 (Oregon)", "ap-1 (Tokyo)"]} />
-          </Preview>
-
-          <Preview name="Accordion">
-            <Accordion
-              items={[
-                { title: "Is it really zero dependencies?", content: "Yes. Plain React and plain CSS. The only imports are yours." },
-                { title: "Can my AI write this markup?", content: "That is the whole point. Predictable props, predictable classes." },
-              ]}
-            />
-          </Preview>
-
-          <Preview name="Table">
-            <Table
-              columns={["Deployment", "Region", "Status"]}
-              rows={[
-                ["web-prod", "eu-1", "running"],
-                ["worker-2", "us-1", "building"],
-                ["cron-daily", "ap-1", "idle"],
-              ]}
-            />
-          </Preview>
-
-          <Preview name="Pagination & breadcrumb">
-            <Breadcrumb items={["Home", "Project", "Deployments"]} />
-            <div style={{ height: 16 }} />
-            <Pagination page={page} pageCount={5} onChange={setPage} />
-          </Preview>
-
-          <Preview name="Skeleton loading">
-            <div className="stack-sm">
-              <Skeleton width="60%" height={18} />
-              <Skeleton width="100%" height={12} />
-              <Skeleton width="90%" height={12} />
-              <div className="row">
-                <Skeleton width={40} height={40} style={{ borderRadius: "50%" }} />
-                <Skeleton width={120} height={14} />
-              </div>
-            </div>
-          </Preview>
-
-          <Preview name="Alerts">
-            <div className="stack">
-              <Alert variant="success" title="Build passed">Deployed to production in 42s.</Alert>
-              <Alert variant="warning" title="Rate limit">80% of your monthly tokens used.</Alert>
-            </div>
-          </Preview>
-
-          <Preview name="Switches">
-            <div className="stack-sm">
-              {[["Autosave", true], ["Streaming responses", true], ["Telemetry", false]].map(([label, def]) => (
-                <SwitchRow key={label} label={label} defaultOn={def} />
+          )}
+          {filtered.map((cat) => (
+            <div key={cat.category}>
+              {cat.components.map((comp) => (
+                <DocSection key={comp.id} comp={comp} category={cat.category} />
               ))}
             </div>
-          </Preview>
-
-          <Preview name="Checkbox & radio">
-            <div className="stack">
-              <Checkbox id="nl" label="Subscribe to changelog" checked={newsletter} onChange={() => setNewsletter(!newsletter)} />
-              <RadioGroup name="plan" options={["Hobby", "Pro", "Team"]} value={plan} onChange={setPlan} />
-              <div className="row wrap">
-                <Kbd>⌘</Kbd><Kbd>K</Kbd>
-                <span style={{ color: "var(--text-faint)", fontSize: 13 }}>to search</span>
-              </div>
+          ))}
+          {total === 0 && (
+            <div className="docs__empty">
+              <p className="mono-label">NO COMPONENTS MATCH "{query.toUpperCase()}"</p>
+              <Button size="sm" variant="secondary" onClick={() => {}}>
+                Clear search
+              </Button>
             </div>
-          </Preview>
-
-          <Preview name="Slider & progress">
-            <div className="stack">
-              <Slider label="Temperature" value={temp} onChange={setTemp} />
-              <Progress value={72} />
-              <div className="row">
-                <Avatar initials="AL" />
-                <Avatar initials="KT" size="lg" />
-                <Avatar initials="+9" />
-              </div>
-            </div>
-          </Preview>
-
-          <Preview name="Modal & toasts">
-            <div className="row wrap">
-              <Button variant="secondary" size="sm" onClick={() => setModalOpen(true)}>Open modal</Button>
-              <ToastDemo />
-            </div>
-          </Preview>
-
-          <Preview name="Cards" span>
-            <Card
-              hoverable
-              title="Pro plan"
-              description="For teams shipping fast."
-              footer={
-                <>
-                  <Button size="sm">Upgrade</Button>
-                  <span style={{ color: "var(--text-faint)", fontSize: 13 }}>$20 / seat / month</span>
-                  <Badge variant="accent" style={{ marginLeft: "auto" }}>popular</Badge>
-                </>
-              }
-            >
-              Unlimited projects · Priority support · Custom themes
-            </Card>
-          </Preview>
+          )}
         </div>
       </div>
-      <ModalDemo open={modalOpen} onClose={() => setModalOpen(false)} />
     </section>
-  );
-}
-
-function SwitchRow({ label, defaultOn }) {
-  const [on, setOn] = useState(defaultOn);
-  return (
-    <div className="switch-row">
-      <span>{label}</span>
-      <Switch id={label.replace(/\s/g, "-").toLowerCase()} checked={on} onChange={() => setOn(!on)} />
-    </div>
   );
 }
 
@@ -509,7 +292,6 @@ function Customize({ accent, onSelectAccent }) {
     root.style.setProperty("--radius-md", `${radius}px`);
     root.style.setProperty("--radius-lg", `${radius + 4}px`);
   }, [radius]);
-
   return (
     <section id="customize" className="section">
       <div className="container customize">
@@ -518,13 +300,10 @@ function Customize({ accent, onSelectAccent }) {
             Make it yours<span className="lime">.</span>
           </h2>
           <p>
-            Every component reads from CSS variables. Change a token once and
-            the whole library follows — no rebuilds, no config files, no
-            theme provider.
+            Every component reads from CSS variables. Change a token once and the whole library
+            follows — no rebuilds, no config files, no theme provider.
           </p>
-          <p className="mono-label note__aside">
-            TRY IT: PICK AN ACCENT AND DRAG THE RADIUS SLIDER
-          </p>
+          <p className="mono-label note__aside">TRY IT: PICK AN ACCENT AND DRAG THE RADIUS SLIDER</p>
           <div className="swatches">
             {ACCENTS.map((a) => (
               <button
@@ -553,6 +332,32 @@ function Customize({ accent, onSelectAccent }) {
   );
 }
 
+function Install() {
+  return (
+    <section id="install" className="section install">
+      <div className="container">
+        <h2 className="section__title">
+          Ship in seconds<span className="lime">.</span>
+        </h2>
+        <div className="install-cmd">
+          <code>$ npm i vibe-ui</code>
+          <span className="mono-label">THAT'S THE WHOLE SETUP</span>
+        </div>
+        <CodeBlock code={`import { Button, Card, Input } from "vibe-ui";
+
+export default function Deploy() {
+  return (
+    <Card title="Deploy to production">
+      <Input label="Branch" placeholder="main" />
+      <Button>Ship it</Button>
+    </Card>
+  );
+}`} />
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="footer">
@@ -564,8 +369,7 @@ function Footer() {
           <span className="mono-label">© 2026</span>
         </div>
         <p className="footer__disclaimer mono-label">
-          INDEPENDENT PROJECT · NO AFFILIATION WITH ANY AI LAB · THIS PAGE WAS
-          BUILT WITH ITSELF, OBVIOUSLY
+          INDEPENDENT PROJECT · NO AFFILIATION WITH ANY AI LAB · THIS PAGE WAS BUILT WITH ITSELF, OBVIOUSLY
         </p>
       </div>
     </footer>
@@ -575,12 +379,25 @@ function Footer() {
 export default function App() {
   const [theme, toggleTheme] = useTheme();
   const [accent, setAccent] = useAccent();
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) {
+        e.preventDefault();
+        document.querySelector(".nav__search input")?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <>
-      <Nav theme={theme} onToggleTheme={toggleTheme} />
+      <Nav theme={theme} onToggleTheme={toggleTheme} query={query} onSearch={setQuery} />
       <Hero />
       <Marquee />
-      <Gallery />
+      <Docs query={query} />
       <Customize accent={accent} onSelectAccent={setAccent} />
       <Install />
       <Footer />

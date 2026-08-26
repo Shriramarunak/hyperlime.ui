@@ -1,11 +1,12 @@
-# vibe-ui
+# vibe.ui
 
-Open-source React UI components designed for AI-generated ("vibe-coded") apps.
+Open-source React UI components designed for AI-generated ("vibe-coded") apps — in a neon-lime, terminal-inspired style.
 
-- **Zero dependencies** — plain React + CSS, no runtime libraries
-- **LLM-friendly** — predictable class names and simple props that AI writes correctly on the first try
-- **Design tokens** — CSS variables for colors, radii, and typography
-- **Live docs** — every component on the landing page is rendered from the library itself
+- **Zero dependencies** — plain React + CSS
+- **LLM-friendly** — predictable props and class names AI writes correctly on the first try
+- **Light + dark themes** — CSS-variable driven, persisted, no flash on load
+- **Live docs with search** — every component documented with variations and copyable code
+- **Customizable** — accent color, radius, and all tokens changeable at runtime
 
 ## Quick start
 
@@ -14,21 +15,33 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:5173 — the landing page doubles as the live component gallery.
+Open http://localhost:5173. Press `/` in the nav to search components.
 
-## Components
+## Components (23+)
 
-`Button` · `Badge` · `Card` · `Alert` · `Input` · `Textarea` · `Switch` · `Progress` · `Avatar` · `Spinner`
+**Inputs** — Autocomplete, Button, IconButton, Button Group, Checkbox, FAB, Speed Dial, Number Field, Radio Group, Rating, Select, Slider, Switch, Text Field, Textarea, Textarea Autosize, Toggle Button, Transfer List
 
-## Usage
+**Data display** — Avatar, Badge, Chip, Divider, Icons, Image List, Kbd, List, Skeleton, Table, Tooltip, Typography
 
-```jsx
-import { Button, Card, Input } from "./components";
+**Feedback** — Alert, Backdrop, Dialog/Modal, Progress, Snackbar/Toast, Spinner
 
-<Card title="Deploy" hoverable>
-  <Input label="Branch" placeholder="main" />
-  <Button>Ship it</Button>
-</Card>
+**Surfaces** — Accordion, App Bar, Card, Paper, Empty State
+
+**Navigation** — Bottom Navigation, Breadcrumbs, Drawer, Link, Menu, Pagination, Stepper, Tabs
+
+**Layout** — Box, Container, Grid, Stack
+
+**Utils** — Click-Away Listener, Portal, Popover/Popper, Transitions (Fade/Collapse/Slide), NoSsr, useMediaQuery, InitColorSchemeScript
+
+## Theming
+
+All components read from CSS variables — override them globally or at runtime:
+
+```css
+:root {
+  --accent: #d6f32f;
+  --radius-md: 12px;
+}
 ```
 
 ## License
