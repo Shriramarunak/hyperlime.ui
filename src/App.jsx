@@ -32,6 +32,23 @@ function useAccent() {
   return [accent, setAccent];
 }
 
+function useHashRoute() {
+  const [hash, setHash] = useState(() => window.location.hash.replace(/^#/, "") || "/");
+  useEffect(() => {
+    const onChange = () => {
+      setHash(window.location.hash.replace(/^#/, "") || "/");
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+  }, []);
+  return hash;
+}
+
+function navigate(path) {
+  window.location.hash = path;
+}
+
 function CodeBlock({ code, filename = "example.jsx" }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -59,36 +76,37 @@ function CodeBlock({ code, filename = "example.jsx" }) {
   );
 }
 
-function Nav({ onToggleTheme, theme, query, onSearch }) {
+function Nav({ onToggleTheme, theme, query, onSearch, route }) {
+  const onDocs = route.startsWith("/components");
   return (
     <nav className="nav">
       <div className="container nav__inner">
-        <a href="#" className="nav__logo">
+        <a href="#/" className="nav__logo">
           hyper<span className="lime">.lime</span>
         </a>
-        <div className="nav__search">
-          <Icon name="search" size={15} />
-          <input
-            value={query}
-            onChange={(e) => onSearch(e.target.value)}
-            placeholder="Search components..."
-            aria-label="Search components"
-          />
-          {query ? (
-            <button className="nav__search-clear" onClick={() => onSearch("")} aria-label="Clear search">
-              <Icon name="close" size={13} />
-            </button>
-          ) : (
-            <span className="nav__search-kbd">
-              <Kbd>/</Kbd>
-            </span>
-          )}
-        </div>
+        {onDocs && (
+          <div className="nav__search">
+            <Icon name="search" size={15} />
+            <input
+              value={query}
+              onChange={(e) => onSearch(e.target.value)}
+              placeholder="Search components..."
+              aria-label="Search components"
+            />
+            {query ? (
+              <button className="nav__search-clear" onClick={() => onSearch("")} aria-label="Clear search">
+                <Icon name="close" size={13} />
+              </button>
+            ) : (
+              <span className="nav__search-kbd">
+                <Kbd>/</Kbd>
+              </span>
+            )}
+          </div>
+        )}
         <div className="nav__links">
-          <a href="#docs">COMPONENTS</a>
-          <a href="#prompt">PROMPT PACK</a>
-          <a href="#customize">CUSTOMIZE</a>
-          <a href="#install">INSTALL</a>
+          <a href="#/components" className={onDocs ? "nav__link--active" : ""}>COMPONENTS</a>
+          <a href="#/prompt" className={route === "/prompt" ? "nav__link--active" : ""}>PROMPT PACK</a>
           <Button variant="secondary" size="sm" onClick={onToggleTheme} aria-label="Toggle theme">
             {theme === "dark" ? "LIGHT" : "DARK"}
           </Button>
@@ -146,16 +164,16 @@ function Hero({ total }) {
       <div className="note">
         <p>
           I asked an AI to build my app and it produced <strong>working UI</strong> on the first
-          prompt. Total dumb luck — I just like <strong>.ui</strong> libraries.
+          prompt. Total dumb luck — I just like <strong>.lime</strong> libraries.
         </p>
         <p className="mono-label note__aside">LEFT IS THE CODE. RIGHT IS THE LIVE RESULT.</p>
       </div>
       <div className="hero__actions">
-        <Button size="lg" onClick={() => document.getElementById("install")?.scrollIntoView({ behavior: "smooth" })}>
-          npm i hyperlime
+        <Button size="lg" onClick={() => navigate("/prompt")}>
+          Copy the prompt pack
         </Button>
-        <Button variant="secondary" size="lg" onClick={() => document.getElementById("docs")?.scrollIntoView({ behavior: "smooth" })}>
-          BROWSE COMPONENTS ↓
+        <Button variant="secondary" size="lg" onClick={() => navigate("/components")}>
+          BROWSE COMPONENTS →
         </Button>
       </div>
       <Playground />
@@ -180,7 +198,16 @@ function Marquee() {
   );
 }
 
-function Sidebar({ docs, selected, onSelect }) {
+function Home({ total }) {
+  return (
+    <>
+      <Hero total={total} />
+      <Marquee />
+    </>
+  );
+}
+
+function Sidebar({ docs, selected }) {
   return (
     <aside className="docs__sidebar">
       {docs.map((cat) => (
@@ -189,12 +216,8 @@ function Sidebar({ docs, selected, onSelect }) {
           {cat.components.map((comp) => (
             <a
               key={comp.id}
-              href={`#${comp.id}`}
+              href={`#/components/${comp.id}`}
               className={`docs__link ${selected === comp.id ? "docs__link--active" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                onSelect(comp.id);
-              }}
             >
               {comp.name}
             </a>
@@ -233,10 +256,9 @@ function PropsTable({ props }) {
   );
 }
 
-function DocPage({ comp, category, onNavigate, prev, next }) {
+function DocPage({ comp, category, prev, next }) {
   useEffect(() => {
-    const el = document.getElementById("docs");
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.scrollTo(0, 0);
   }, [comp.id]);
 
   return (
@@ -274,12 +296,12 @@ function DocPage({ comp, category, onNavigate, prev, next }) {
 
       <div className="docpage__nav">
         {prev ? (
-          <Button variant="secondary" size="sm" onClick={() => onNavigate(prev.id)}>
+          <Button variant="secondary" size="sm" onClick={() => navigate(`/components/${prev.id}`)}>
             ← {prev.name}
           </Button>
         ) : <span />}
         {next && (
-          <Button variant="secondary" size="sm" onClick={() => onNavigate(next.id)}>
+          <Button variant="secondary" size="sm" onClick={() => navigate(`/components/${next.id}`)}>
             {next.name} →
           </Button>
         )}
@@ -288,7 +310,7 @@ function DocPage({ comp, category, onNavigate, prev, next }) {
   );
 }
 
-function Docs({ query, selected, onSelect }) {
+function DocsPage({ query, route }) {
   const q = query.trim().toLowerCase();
 
   const filtered = useMemo(
@@ -308,27 +330,33 @@ function Docs({ query, selected, onSelect }) {
   );
 
   const flat = useMemo(() => filtered.flatMap((c) => c.components), [filtered]);
-  const current = flat.find((c) => c.id === selected) || flat[0];
+  const requested = route.split("/")[2];
+  const current = flat.find((c) => c.id === requested) || flat[0];
   const currentCat = filtered.find((cat) => cat.components.some((c) => c.id === current?.id));
   const idx = flat.findIndex((c) => c.id === current?.id);
+  const total = filtered.reduce((n, c) => n + c.components.length, 0);
 
   return (
-    <section id="docs" className="docs">
+    <section className="docs">
       <div className="docs__layout container">
-        <Sidebar docs={filtered} selected={current?.id} onSelect={onSelect} />
+        <Sidebar docs={filtered} selected={current?.id} />
         <div className="docs__content">
+          {q && (
+            <div className="mono-label docs__results">
+              {total} RESULT{total === 1 ? "" : "S"} FOR "{query.toUpperCase()}"
+            </div>
+          )}
           {current ? (
             <DocPage
               comp={current}
               category={currentCat.category}
-              onNavigate={onSelect}
               prev={flat[idx - 1]}
               next={flat[idx + 1]}
             />
           ) : (
             <div className="docs__empty">
               <p className="mono-label">NO COMPONENTS MATCH "{query.toUpperCase()}"</p>
-              <Button size="sm" variant="secondary" onClick={() => onSelect(DOCS[0].components[0].id)}>
+              <Button size="sm" variant="secondary" onClick={() => navigate("/components")}>
                 Clear search
               </Button>
             </div>
@@ -338,14 +366,6 @@ function Docs({ query, selected, onSelect }) {
     </section>
   );
 }
-
-const TOKENS = [
-  ["--accent", "brand color for buttons, focus rings, highlights"],
-  ["--bg / --bg-elevated / --bg-hover", "surfaces"],
-  ["--border / --border-strong", "hairlines and outlines"],
-  ["--radius-sm / md / lg", "corner rounding"],
-  ["--font-sans / --font-mono", "typography"],
-];
 
 function buildPromptPack(docs) {
   const lines = [
@@ -383,7 +403,7 @@ function buildPromptPack(docs) {
   return lines.join("\n");
 }
 
-function PromptPack() {
+function PromptPage() {
   const pack = useMemo(() => buildPromptPack(DOCS), []);
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -394,16 +414,16 @@ function PromptPack() {
     } catch {}
   };
   return (
-    <section id="prompt" className="section">
+    <section className="section">
       <div className="container prompt">
         <div className="prompt__intro">
-          <h2 className="section__title section__title--left">
+          <h1 className="section__title section__title--left">
             Prompt pack<span className="lime">.</span>
-          </h2>
+          </h1>
           <p>
             One block containing the entire hyper.lime API — every component, prop, and default.
             Paste it into Cursor, Claude, or ChatGPT and the model writes correct hyper.lime
-            markup on the first try. It is generated live from these docs, so it never drifts.
+            markup on the first try. It is generated live from the docs, so it never drifts.
           </p>
           <p className="mono-label note__aside">
             MACHINES READ IT TOO: <a href="/llms.txt" className="prompt__link">/llms.txt</a>
@@ -418,6 +438,14 @@ function PromptPack() {
     </section>
   );
 }
+
+const TOKENS = [
+  ["--accent", "brand color for buttons, focus rings, highlights"],
+  ["--bg / --bg-elevated / --bg-hover", "surfaces"],
+  ["--border / --border-strong", "hairlines and outlines"],
+  ["--radius-sm / md / lg", "corner rounding"],
+  ["--font-sans / --font-mono", "typography"],
+];
 
 function Customize({ accent, onSelectAccent }) {
   const [radius, setRadius] = useState(12);
@@ -502,7 +530,7 @@ function Footer() {
       <div className="container footer__inner">
         <div className="footer__brand-row">
           <span className="footer__brand">
-            hyper<span className="lime">.lime</span>
+            HYPER<span className="lime">.LIME</span>
           </span>
           <span className="mono-label">© 2026</span>
         </div>
@@ -519,7 +547,7 @@ export default function App() {
   const [theme, toggleTheme] = useTheme();
   const [accent, setAccent] = useAccent();
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState("button");
+  const route = useHashRoute();
 
   useEffect(() => {
     const onKey = (e) => {
@@ -532,15 +560,27 @@ export default function App() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+  const total = DOCS.reduce((n, c) => n + c.components.length, 0);
+
+  let page;
+  if (route.startsWith("/components")) {
+    page = <DocsPage query={query} route={route} />;
+  } else if (route === "/prompt") {
+    page = <PromptPage />;
+  } else {
+    page = <Home total={total} />;
+  }
+
   return (
     <>
-      <Nav theme={theme} onToggleTheme={toggleTheme} query={query} onSearch={setQuery} />
-      <Hero total={DOCS.reduce((n, c) => n + c.components.length, 0)} />
-      <Marquee />
-      <Docs query={query} selected={selected} onSelect={setSelected} />
-      <PromptPack />
-      <Customize accent={accent} onSelectAccent={setAccent} />
-      <Install />
+      <Nav onToggleTheme={toggleTheme} theme={theme} query={query} onSearch={setQuery} route={route} />
+      {page}
+      {route === "/" && (
+        <>
+          <Customize accent={accent} onSelectAccent={setAccent} />
+          <Install />
+        </>
+      )}
       <Footer />
     </>
   );
