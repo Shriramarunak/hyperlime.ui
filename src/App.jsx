@@ -131,11 +131,11 @@ function Playground() {
   );
 }
 
-function Hero() {
+function Hero({ total }) {
   return (
     <header className="hero">
       <div className="hero__label mono-label">
-        <span className="dot" /> {DOCS.reduce((n, c) => n + c.components.length, 0)} COMPONENTS · AN OPEN-SOURCE UI LIBRARY FOR VIBE-CODED APPS
+        <span className="dot" /> {total} COMPONENTS · AN OPEN-SOURCE UI LIBRARY FOR VIBE-CODED APPS
       </div>
       <h1 className="hero__title">Hi, builders.</h1>
       <p className="hero__subtitle">
@@ -178,7 +178,7 @@ function Marquee() {
   );
 }
 
-function Sidebar({ docs, activeId }) {
+function Sidebar({ docs, selected, onSelect }) {
   return (
     <aside className="docs__sidebar">
       {docs.map((cat) => (
@@ -188,7 +188,11 @@ function Sidebar({ docs, activeId }) {
             <a
               key={comp.id}
               href={`#${comp.id}`}
-              className={`docs__link ${activeId === comp.id ? "docs__link--active" : ""}`}
+              className={`docs__link ${selected === comp.id ? "docs__link--active" : ""}`}
+              onClick={(e) => {
+                e.preventDefault();
+                onSelect(comp.id);
+              }}
             >
               {comp.name}
             </a>
@@ -199,25 +203,90 @@ function Sidebar({ docs, activeId }) {
   );
 }
 
-function DocSection({ comp, category }) {
+function PropsTable({ props }) {
+  if (!props || props.length === 0) {
+    return <p className="doc__none mono-label">THIS COMPONENT TAKES NO PROPS.</p>;
+  }
   return (
-    <section id={comp.id} className="doc">
-      <div className="mono-label doc__cat">{category}</div>
-      <h3 className="doc__name">{comp.name}</h3>
-      <p className="doc__blurb">{comp.blurb}</p>
-      {comp.demos.map((demo) => (
-        <div key={demo.title} className="doc__demo">
-          <div className="mono-label doc__demo-label">{demo.title}</div>
-          <div className="doc__demo-stage">{demo.node}</div>
-        </div>
-      ))}
-      <CodeBlock code={comp.code} />
-    </section>
+    <table className="props">
+      <thead>
+        <tr>
+          <th>Prop</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.map((row) => (
+          <tr key={row.name}>
+            <td><code className="props__name">{row.name}</code></td>
+            <td><code className="props__type">{row.type}</code></td>
+            <td><code className="props__def">{row.def}</code></td>
+            <td>{row.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
-function Docs({ query }) {
-  const [activeId, setActiveId] = useState("");
+function DocPage({ comp, category, onNavigate, prev, next }) {
+  useEffect(() => {
+    const el = document.getElementById("docs");
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [comp.id]);
+
+  return (
+    <article className="docpage" key={comp.id}>
+      <div className="mono-label doc__cat">{category}</div>
+      <h3 className="doc__name">{comp.name}</h3>
+      <p className="doc__blurb">{comp.blurb}</p>
+
+      {comp.demos.map((demo) => (
+        <div key={demo.title} className="docpage__demo">
+          <div className="docpage__demo-head">
+            <span className="doc__demo-label mono-label">{demo.title}</span>
+          </div>
+          <div className="doc__demo-stage">{demo.node}</div>
+          <CodeBlock code={demo.code} filename={`${comp.id}.jsx`} />
+        </div>
+      ))}
+
+      <h4 className="docpage__sub">Props</h4>
+      <PropsTable props={comp.props} />
+
+      {comp.css && (
+        <>
+          <h4 className="docpage__sub">CSS classes</h4>
+          <CodeBlock code={comp.css} filename="classes.css" />
+        </>
+      )}
+
+      {comp.a11y && (
+        <>
+          <h4 className="docpage__sub">Accessibility</h4>
+          <p className="doc__blurb doc__blurb--tight">{comp.a11y}</p>
+        </>
+      )}
+
+      <div className="docpage__nav">
+        {prev ? (
+          <Button variant="secondary" size="sm" onClick={() => onNavigate(prev.id)}>
+            ← {prev.name}
+          </Button>
+        ) : <span />}
+        {next && (
+          <Button variant="secondary" size="sm" onClick={() => onNavigate(next.id)}>
+            {next.name} →
+          </Button>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function Docs({ query, selected, onSelect }) {
   const q = query.trim().toLowerCase();
 
   const filtered = useMemo(
@@ -236,47 +305,28 @@ function Docs({ query }) {
     [q]
   );
 
-  const total = filtered.reduce((n, c) => n + c.components.length, 0);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActiveId(e.target.id);
-        });
-      },
-      { rootMargin: "-20% 0px -70% 0px" }
-    );
-    filtered.forEach((cat) =>
-      cat.components.forEach((comp) => {
-        const el = document.getElementById(comp.id);
-        if (el) observer.observe(el);
-      })
-    );
-    return () => observer.disconnect();
-  }, [filtered]);
+  const flat = useMemo(() => filtered.flatMap((c) => c.components), [filtered]);
+  const current = flat.find((c) => c.id === selected) || flat[0];
+  const currentCat = filtered.find((cat) => cat.components.some((c) => c.id === current?.id));
+  const idx = flat.findIndex((c) => c.id === current?.id);
 
   return (
     <section id="docs" className="docs">
       <div className="docs__layout container">
-        <Sidebar docs={filtered} activeId={activeId} />
+        <Sidebar docs={filtered} selected={current?.id} onSelect={onSelect} />
         <div className="docs__content">
-          {q && (
-            <div className="mono-label docs__results">
-              {total} RESULT{total === 1 ? "" : "S"} FOR "{query.toUpperCase()}"
-            </div>
-          )}
-          {filtered.map((cat) => (
-            <div key={cat.category}>
-              {cat.components.map((comp) => (
-                <DocSection key={comp.id} comp={comp} category={cat.category} />
-              ))}
-            </div>
-          ))}
-          {total === 0 && (
+          {current ? (
+            <DocPage
+              comp={current}
+              category={currentCat.category}
+              onNavigate={onSelect}
+              prev={flat[idx - 1]}
+              next={flat[idx + 1]}
+            />
+          ) : (
             <div className="docs__empty">
               <p className="mono-label">NO COMPONENTS MATCH "{query.toUpperCase()}"</p>
-              <Button size="sm" variant="secondary" onClick={() => {}}>
+              <Button size="sm" variant="secondary" onClick={() => onSelect(DOCS[0].components[0].id)}>
                 Clear search
               </Button>
             </div>
@@ -354,7 +404,9 @@ function Install() {
           <code>$ npm i vibe-ui</code>
           <span className="mono-label">THAT'S THE WHOLE SETUP</span>
         </div>
-        <CodeBlock code={`import { Button, Card, Input } from "vibe-ui";
+        <CodeBlock
+          filename="deploy.jsx"
+          code={`import { Button, Card, Input } from "vibe-ui";
 
 export default function Deploy() {
   return (
@@ -363,7 +415,8 @@ export default function Deploy() {
       <Button>Ship it</Button>
     </Card>
   );
-}`} />
+}`}
+        />
       </div>
     </section>
   );
@@ -391,6 +444,7 @@ export default function App() {
   const [theme, toggleTheme] = useTheme();
   const [accent, setAccent] = useAccent();
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState("button");
 
   useEffect(() => {
     const onKey = (e) => {
@@ -406,9 +460,9 @@ export default function App() {
   return (
     <>
       <Nav theme={theme} onToggleTheme={toggleTheme} query={query} onSearch={setQuery} />
-      <Hero />
+      <Hero total={DOCS.reduce((n, c) => n + c.components.length, 0)} />
       <Marquee />
-      <Docs query={query} />
+      <Docs query={query} selected={selected} onSelect={setSelected} />
       <Customize accent={accent} onSelectAccent={setAccent} />
       <Install />
       <Footer />
