@@ -126,12 +126,12 @@ export function TransferList({ items }) {
       {list.map((item) => (
         <div
           key={item}
-          className={`vb-transfer__item ${picked.includes(item) ? "vb-transfer__item--selected" : ""}`}
+          className={`vb-transfer__item ${picked.has(item) ? "vb-transfer__item--selected" : ""}`}
           onClick={() => toggle(item)}
           role="option"
-          aria-selected={picked.includes(item)}
+          aria-selected={picked.has(item)}
         >
-          <span>{picked.includes(item) ? "☑" : "☐"}</span>
+          <span>{picked.has(item) ? "☑" : "☐"}</span>
           {item}
         </div>
       ))}
