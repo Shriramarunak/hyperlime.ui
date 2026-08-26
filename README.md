@@ -80,6 +80,14 @@ public/
 └── llms.txt        # machine-readable API reference for AI tools
 ```
 
+## Templates
+
+The docs site ships full page layouts built from the library — **Login**, **Pricing**, and **Dashboard** — each rendered live with copy-paste code. See the `#/templates` page.
+
+## Changelog
+
+Release history lives on the `#/changelog` page of the docs site.
+
 ## AI integration
 
 - **`/llms.txt`** — full component API reference in LLM-friendly markdown, served at the site root

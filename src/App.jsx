@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Badge, Card, Input, Kbd, Icon, Slider } from "./components";
 import { DOCS } from "./docsData";
+import { TEMPLATES } from "./templates";
 import { highlight } from "./utils/highlight";
 import "./App.css";
 
@@ -106,7 +107,9 @@ function Nav({ onToggleTheme, theme, query, onSearch, route }) {
         )}
         <div className="nav__links">
           <a href="#/components" className={onDocs ? "nav__link--active" : ""}>COMPONENTS</a>
+          <a href="#/templates" className={route.startsWith("/templates") ? "nav__link--active" : ""}>TEMPLATES</a>
           <a href="#/prompt" className={route === "/prompt" ? "nav__link--active" : ""}>PROMPT PACK</a>
+          <a href="#/changelog" className={route === "/changelog" ? "nav__link--active" : ""}>CHANGELOG</a>
           <Button variant="secondary" size="sm" onClick={onToggleTheme} aria-label="Toggle theme">
             {theme === "dark" ? "LIGHT" : "DARK"}
           </Button>
@@ -439,6 +442,115 @@ function PromptPage() {
   );
 }
 
+function TemplatesPage() {
+  return (
+    <section className="section">
+      <div className="container">
+        <h1 className="section__title section__title--left">
+          Templates<span className="lime">.</span>
+        </h1>
+        <p className="section__subtitle" style={{ textAlign: "left", margin: "0 0 40px", maxWidth: 640 }}>
+          Full page layouts assembled from hyper.lime components. Rendered live below — grab the
+          code and make it yours.
+        </p>
+        <div className="stack" style={{ gap: 48 }}>
+          {TEMPLATES.map((tpl) => (
+            <div key={tpl.id}>
+              <div className="row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
+                <div>
+                  <h3 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em" }}>{tpl.name}</h3>
+                  <p style={{ fontSize: 14, color: "var(--text-muted)" }}>{tpl.description}</p>
+                </div>
+              </div>
+              <div className="docpage__demo">
+                <div className="docpage__demo-head">
+                  <span className="doc__demo-label mono-label">LIVE PREVIEW</span>
+                </div>
+                <div className="doc__demo-stage">{tpl.node}</div>
+                <CodeBlock code={tpl.code} filename={`${tpl.id}.jsx`} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const CHANGELOG = [
+  {
+    version: "v0.4.0",
+    date: "Feb 2026",
+    color: "accent",
+    items: [
+      "12 new components: Chat, Command Palette, OTP Input, Tag Input, File Upload, Avatar Group, Stat, Timeline, Sparkline, Progress Ring, Banner",
+      "Input leading/trailing icon slots, dismissible Alert, Card accent variant",
+      "New AI component category",
+    ],
+  },
+  {
+    version: "v0.3.0",
+    date: "Jan 2026",
+    color: "accent",
+    items: [
+      "TypeScript migration — fully typed library with exported prop types",
+      "hyperlime CLI for copy-paste installs (npx hyperlime add button)",
+      "GitHub Actions CI: typecheck + lint + build",
+      "Multi-page docs: landing, /components, /prompt",
+    ],
+  },
+  {
+    version: "v0.2.0",
+    date: "Dec 2025",
+    color: "muted",
+    items: [
+      "Light + dark themes with persistence",
+      "MUI-style docs: sidebar, search, props tables, a11y notes",
+      "Runtime theming: accent swatches + radius slider",
+      "llms.txt + Prompt Pack for AI tools",
+    ],
+  },
+  {
+    version: "v0.1.0",
+    date: "Nov 2025",
+    color: "muted",
+    items: [
+      "Initial release: 23 components, live-preview landing page, neon-lime design system",
+    ],
+  },
+];
+
+function ChangelogPage() {
+  return (
+    <section className="section">
+      <div className="container changelog">
+        <h1 className="section__title section__title--left">
+          Changelog<span className="lime">.</span>
+        </h1>
+        <p className="section__subtitle" style={{ textAlign: "left", margin: "0 0 48px", maxWidth: 560 }}>
+          Every release, what shipped, and why it matters.
+        </p>
+        <div style={{ maxWidth: 640 }}>
+          {CHANGELOG.map((release) => (
+            <div key={release.version} style={{ marginBottom: 48 }}>
+              <div className="row" style={{ marginBottom: 16, gap: 14 }}>
+                <Badge variant={release.color === "accent" ? "accent" : "default"}>{release.version}</Badge>
+                <span className="mono-label">{release.date}</span>
+              </div>
+              <Timeline
+                items={release.items.map((item) => ({
+                  title: item,
+                  color: release.color,
+                }))}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const TOKENS = [
   ["--accent", "brand color for buttons, focus rings, highlights"],
   ["--bg / --bg-elevated / --bg-hover", "surfaces"],
@@ -455,6 +567,31 @@ function Customize({ accent, onSelectAccent }) {
     root.style.setProperty("--radius-md", `${radius}px`);
     root.style.setProperty("--radius-lg", `${radius + 4}px`);
   }, [radius]);
+
+  const downloadTokens = () => {
+    const css = `/* hyper.lime tokens — generated on the docs site */
+:root {
+  --accent: ${accent.accent};
+  --accent-hover: ${accent.hover};
+  --accent-subtle: color-mix(in srgb, ${accent.accent} 14%, transparent);
+  --radius-sm: ${Math.max(radius - 4, 0)}px;
+  --radius-md: ${radius}px;
+  --radius-lg: ${radius + 4}px;
+}
+
+[data-theme="light"] {
+  --accent-subtle: color-mix(in srgb, ${accent.accent} 18%, transparent);
+}
+`;
+    const blob = new Blob([css], { type: "text/css" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "hyperlime-tokens.css";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section id="customize" className="section">
       <div className="container customize">
@@ -480,6 +617,12 @@ function Customize({ accent, onSelectAccent }) {
           </div>
           <div style={{ maxWidth: 320 }}>
             <Slider label="Border radius" value={radius} min={0} max={24} onChange={setRadius} />
+          </div>
+          <div className="row">
+            <Button variant="secondary" size="sm" onClick={downloadTokens}>
+              Download tokens.css
+            </Button>
+            <span className="mono-label">EXPORTED WITH YOUR CURRENT PICKS</span>
           </div>
         </div>
         <div className="customize__tokens">
@@ -567,6 +710,10 @@ export default function App() {
     page = <DocsPage query={query} route={route} />;
   } else if (route === "/prompt") {
     page = <PromptPage />;
+  } else if (route === "/templates") {
+    page = <TemplatesPage />;
+  } else if (route === "/changelog") {
+    page = <ChangelogPage />;
   } else {
     page = <Home total={total} />;
   }
