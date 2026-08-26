@@ -338,7 +338,7 @@ function DocsPage({ query, route }) {
 
   return (
     <section className="docs">
-      <div className="docs__layout container">
+      <div className="docs__layout">
         <Sidebar docs={filtered} selected={current?.id} />
         <div className="docs__content">
           {q && (
@@ -579,9 +579,9 @@ export default function App() {
         <>
           <Customize accent={accent} onSelectAccent={setAccent} />
           <Install />
+          <Footer />
         </>
       )}
-      <Footer />
     </>
   );
 }
