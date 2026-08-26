@@ -17,7 +17,7 @@
   border-radius: var(--radius-sm);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s var(--ease-out), transform 0.15s var(--ease-out);
 }
 
 .vb-tooltip:hover .vb-tooltip__bubble,

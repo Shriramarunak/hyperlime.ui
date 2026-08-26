@@ -23,7 +23,7 @@
   text-align: left;
   padding: 16px 20px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s var(--ease-out);
 }
 
 .vb-accordion__trigger:hover {
@@ -32,7 +32,7 @@
 
 .vb-accordion__icon {
   color: var(--accent);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s var(--ease-out);
   flex-shrink: 0;
 }
 

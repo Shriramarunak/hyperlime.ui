@@ -37,7 +37,7 @@
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s var(--ease-out);
 }
 
 .vb-togglegroup__btn:hover {
@@ -64,7 +64,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 8px 24px var(--shadow);
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s var(--ease-out), background 0.15s var(--ease-out);
 }
 
 .vb-fab:hover {
@@ -86,7 +86,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  animation: vb-speed-in 0.18s ease;
+  animation: vb-speed-in 0.18s var(--ease-spring);
 }
 
 .vb-speeddial__label {
@@ -126,7 +126,7 @@
   border-radius: var(--radius-md);
   background: var(--bg-elevated);
   overflow: hidden;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
 }
 
 .vb-numberfield:focus-within {
@@ -141,7 +141,7 @@
   color: var(--text-muted);
   font-size: 18px;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out);
 }
 
 .vb-numberfield button:hover:not(:disabled) {
@@ -228,7 +228,7 @@
   color: var(--text-muted);
   padding: 10px 14px;
   cursor: pointer;
-  transition: background 0.12s ease;
+  transition: background 0.12s var(--ease-out);
 }
 
 .vb-transfer__item:hover {

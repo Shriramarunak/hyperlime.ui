@@ -3,7 +3,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
 }
 
 .vb-card--hoverable:hover {

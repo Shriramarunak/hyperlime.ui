@@ -16,7 +16,7 @@
   background: var(--bg-hover);
   border: 1px solid var(--border-strong);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s var(--ease-out);
   flex-shrink: 0;
   position: relative;
 }
@@ -74,7 +74,7 @@
   background: var(--accent);
   border: none;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s var(--ease-out);
 }
 
 .vb-slider::-webkit-slider-thumb:hover {

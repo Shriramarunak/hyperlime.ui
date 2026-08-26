@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Badge, Card, Input, Kbd, Icon, Slider } from "./components";
 import { DOCS } from "./docsData";
+import { highlight } from "./utils/highlight";
 import "./App.css";
 
 const ACCENTS = [
@@ -31,7 +32,7 @@ function useAccent() {
   return [accent, setAccent];
 }
 
-function CodeBlock({ code }) {
+function CodeBlock({ code, filename = "example.jsx" }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -41,12 +42,18 @@ function CodeBlock({ code }) {
     } catch {}
   };
   return (
-    <div className="codeblock">
-      <button className="codeblock__copy mono-label" onClick={copy}>
-        {copied ? "COPIED" : "COPY"}
-      </button>
-      <pre>
-        <code>{code}</code>
+    <div className="macwindow">
+      <div className="macwindow__bar">
+        <span className="macwindow__dots">
+          <span /><span /><span />
+        </span>
+        <span className="macwindow__title mono-label">{filename}</span>
+        <button className="macwindow__copy mono-label" onClick={copy}>
+          {copied ? "COPIED" : "COPY"}
+        </button>
+      </div>
+      <pre className="macwindow__body">
+        <code>{highlight(code)}</code>
       </pre>
     </div>
   );
@@ -97,12 +104,16 @@ function Playground() {
         <span className="playground__title mono-label">APP.TSX — GENERATED FROM ONE PROMPT</span>
       </div>
       <div className="playground__panes">
-        <pre className="playground__code"><code>{`<Card title="Deploy to production"
+        <div className="playground__code">
+          <pre>
+            <code>{highlight(`<Card title="Deploy to production"
       description="main · build #421">
   <Badge variant="success" dot>passing</Badge>
   <Input label="Region" placeholder="eu-1" />
   <Button>Ship it</Button>
-</Card>`}</code></pre>
+</Card>`)}</code>
+          </pre>
+        </div>
         <div className="playground__result">
           <Card
             title="Deploy to production"

@@ -10,7 +10,7 @@
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s var(--ease-out);
   flex-shrink: 0;
 }
 
@@ -51,7 +51,7 @@
   background: var(--bg-hover);
   border: 1px solid var(--border-strong);
   color: var(--text-muted);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s var(--ease-out);
 }
 
 .vb-chip:hover {
