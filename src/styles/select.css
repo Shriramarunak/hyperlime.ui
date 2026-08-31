@@ -37,3 +37,21 @@
   color: var(--text-faint);
   font-size: 12px;
 }
+
+.vb-select--sm .vb-select__native {
+  font-size: 13px;
+  padding: 8px 32px 8px 12px;
+}
+
+.vb-select--lg .vb-select__native {
+  font-size: 15px;
+  padding: 14px 40px 14px 16px;
+}
+
+.vb-select--error .vb-select__native {
+  border-color: var(--red);
+}
+
+.vb-select--error .vb-select__native:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.15);
+}

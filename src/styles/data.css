@@ -34,6 +34,21 @@
   background: var(--bg-hover);
 }
 
+.vb-table--striped tbody tr:nth-child(even) {
+  background: var(--bg-hover);
+}
+
+.vb-table--striped tbody tr:nth-child(even):hover {
+  background: var(--bg-hover);
+  filter: brightness(0.97);
+}
+
+.vb-table--compact th,
+.vb-table--compact td {
+  padding: 8px 10px;
+  font-size: 12.5px;
+}
+
 .vb-pagination {
   display: flex;
   align-items: center;

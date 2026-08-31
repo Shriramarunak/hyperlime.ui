@@ -272,6 +272,50 @@ export function extendDocs(DOCS) {
     }
   );
 
+
+  // Color variations for upgraded components
+  comp("Inputs", "button").demos.push({
+    title: "Custom colors",
+    code: `<div style={{ display: "flex", gap: 12 }}>
+  <Button style={{ "--accent": "#8b7cff" }}>Violet</Button>
+  <Button style={{ "--accent": "#4cc9f0" }}>Cyan</Button>
+  <Button style={{ "--accent": "#ffa94d" }}>Orange</Button>
+</div>`,
+    node: (
+      <div className="row wrap">
+        <Button style={{ "--accent": "#8b7cff" }}>Violet</Button>
+        <Button style={{ "--accent": "#4cc9f0" }}>Cyan</Button>
+        <Button style={{ "--accent": "#ffa94d" }}>Orange</Button>
+      </div>
+    ),
+  });
+
+  comp("Data display", "table").demos.push({
+    title: "Striped & compact",
+    code: `<Table striped columns={["Name", "Status"]} rows={[["web-prod", "running"]]} />
+<Table compact columns={["Name", "Status"]} rows={[["web-prod", "running"]]} />`,
+    node: (
+      <div className="stack">
+        <Table striped columns={["Name", "Status"]} rows={[["web-prod", "running"], ["worker-2", "building"]]} />
+        <Table compact columns={["Name", "Status"]} rows={[["web-prod", "running"], ["worker-2", "building"]]} />
+      </div>
+    ),
+  });
+
+  comp("Data display", "avatar").demos.push({
+    title: "With status",
+    code: `<Avatar initials="AL" status="online" />
+<Avatar initials="KT" status="busy" />
+<Avatar initials="MJ" status="offline" />`,
+    node: (
+      <div className="row">
+        <Avatar initials="AL" status="online" />
+        <Avatar initials="KT" status="busy" />
+        <Avatar initials="MJ" status="offline" />
+      </div>
+    ),
+  });
+
   cat("Data display").components.push(
     {
       id: "avatar-group",

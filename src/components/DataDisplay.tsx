@@ -4,11 +4,13 @@ import "./../styles/data.css";
 export interface TableProps {
   columns: string[];
   rows: ReactNode[][];
+  striped?: boolean;
+  compact?: boolean;
 }
 
-export function Table({ columns, rows }: TableProps) {
+export function Table({ columns, rows, striped = false, compact = false }: TableProps) {
   return (
-    <table className="vb-table">
+    <table className={`vb-table ${striped ? "vb-table--striped" : ""} ${compact ? "vb-table--compact" : ""}`}>
       <thead>
         <tr>
           {columns.map((col) => (

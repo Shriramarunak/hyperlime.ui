@@ -64,6 +64,11 @@
   color: var(--accent);
 }
 
+.vb-chip--sm {
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
 .vb-chip__remove {
   display: inline-flex;
   align-items: center;

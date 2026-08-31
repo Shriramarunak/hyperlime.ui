@@ -14,12 +14,14 @@ export interface AlertProps {
   variant?: AlertVariant;
   title?: string;
   onClose?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
   children?: ReactNode;
 }
 
-export default function Alert({ variant = "info", title, onClose, children }: AlertProps) {
+export default function Alert({ variant = "info", title, onClose, className = "", style, children }: AlertProps) {
   return (
-    <div className={`vb-alert vb-alert--${variant}`} role="alert">
+    <div className={`vb-alert vb-alert--${variant} ${className}`} style={style} role="alert">
       <span className="vb-alert__icon">{icons[variant]}</span>
       <div style={{ flex: 1 }}>
         {title && <div className="vb-alert__title">{title}</div>}

@@ -3,13 +3,15 @@ import "./../styles/chip.css";
 
 export interface ChipProps {
   variant?: "default" | "accent";
+  size?: "sm" | "md";
+  color?: string;
   onRemove?: () => void;
   children?: ReactNode;
 }
 
-export function Chip({ variant = "default", onRemove, children }: ChipProps) {
+export function Chip({ variant = "default", size = "md", color, onRemove, children }: ChipProps) {
   return (
-    <span className={`vb-chip vb-chip--${variant}`}>
+    <span className={`vb-chip vb-chip--${variant} vb-chip--${size}`} style={color ? ({ "--accent": color } as React.CSSProperties) : undefined}>
       {children}
       {onRemove && (
         <button className="vb-chip__remove" onClick={onRemove} aria-label="Remove">

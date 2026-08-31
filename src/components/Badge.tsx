@@ -9,9 +9,9 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children?: ReactNode;
 }
 
-export default function Badge({ variant = "default", dot = false, children, ...props }: BadgeProps) {
+export default function Badge({ variant = "default", dot = false, children, className = "", style, ...props }: BadgeProps & { className?: string; style?: React.CSSProperties }) {
   return (
-    <span className={`vb-badge vb-badge--${variant}`} {...props}>
+    <span className={`vb-badge vb-badge--${variant} ${className}`} style={style} {...props}>
       {dot && <span className="vb-badge__dot" />}
       {children}
     </span>
