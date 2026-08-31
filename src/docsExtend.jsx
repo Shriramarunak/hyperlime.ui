@@ -19,6 +19,11 @@ import {
   TypingIndicator,
   Chat,
   CommandPalette,
+  Calendar,
+  ColorPicker,
+  TreeView,
+  DataGrid,
+  Carousel,
 } from "./components";
 
 function OTPDemo() {
@@ -77,6 +82,73 @@ function AlertDismissibleDemo() {
       Deployed to production in 42s.
     </Alert>
   );
+}
+
+function CalendarDemo() {
+  const [date, setDate] = useState(new Date());
+  return (
+    <div className="stack-sm">
+      <Calendar value={date} onChange={setDate} />
+      <span className="mono-label">SELECTED: {date.toLocaleDateString()}</span>
+    </div>
+  );
+}
+
+function ColorPickerDemo() {
+  const [color, setColor] = useState("#d6f32f");
+  return (
+    <div className="row" style={{ gap: 24, alignItems: "flex-start" }}>
+      <ColorPicker value={color} onChange={setColor} />
+      <div className="stack-sm">
+        <div style={{ width: 80, height: 80, borderRadius: 12, background: color, border: "1px solid var(--border)" }} />
+        <span className="mono-label">{color.toUpperCase()}</span>
+      </div>
+    </div>
+  );
+}
+
+function TreeViewDemo() {
+  const [selected, setSelected] = useState("components");
+  return (
+    <TreeView
+      selected={selected}
+      onSelect={setSelected}
+      nodes={[
+        {
+          id: "src",
+          label: "src",
+          children: [
+            { id: "components", label: "components" },
+            { id: "styles", label: "styles" },
+            { id: "utils", label: "utils" },
+          ],
+        },
+        { id: "public", label: "public" },
+        { id: "package.json", label: "package.json" },
+      ]}
+    />
+  );
+}
+
+function DataGridDemo() {
+  return (
+    <DataGrid
+      columns={[
+        { key: "name", label: "Name", sortable: true },
+        { key: "region", label: "Region" },
+        { key: "status", label: "Status", sortable: true },
+      ]}
+      rows={[
+        { name: "web-prod", region: "eu-1", status: "running" },
+        { name: "worker-2", region: "us-1", status: "building" },
+        { name: "cron-daily", region: "ap-1", status: "idle" },
+      ]}
+    />
+  );
+}
+
+function CarouselDemo() {
+  return <Carousel items={["Slide one — welcome", "Slide two — features", "Slide three — get started"]} autoPlay />;
 }
 
 const p = (name, type, def, desc) => ({ name, type, def, desc });
@@ -330,6 +402,127 @@ export function extendDocs(DOCS) {
       ],
     }
   );
+
+  cat("Inputs").components.push(
+    {
+      id: "calendar",
+      name: "Calendar",
+      blurb: "Month grid with today highlight, selected state, and prev/next navigation.",
+      a11y: "Day buttons are native <button>; selected day gets accent fill.",
+      css: ".vb-calendar__day--selected  /* lime fill */",
+      props: [
+        p("value", "Date", "—", "Controlled selected date."),
+        p("onChange", "(date: Date) => void", "—", "Called when a day is clicked."),
+      ],
+      demos: [
+        {
+          title: "Controlled",
+          code: `const [date, setDate] = useState(new Date());
+
+<Calendar value={date} onChange={setDate} />`,
+          node: <CalendarDemo />,
+        },
+      ],
+    },
+    {
+      id: "color-picker",
+      name: "Color Picker",
+      blurb: "Swatch grid with preview and hex input.",
+      a11y: "Active swatch gets a visible border; hex input is a standard text field.",
+      css: ".vb-colorpicker__swatch--active",
+      props: [
+        p("value", "string", '"#d6f32f"', "Hex color."),
+        p("onChange", "(hex: string) => void", "—", "Called on swatch or input change."),
+        p("presets", "string[]", "8 lime/violet/cyan presets", "Swatch colors."),
+      ],
+      demos: [
+        {
+          title: "Presets",
+          code: `const [color, setColor] = useState("#d6f32f");
+
+<ColorPicker value={color} onChange={setColor} />`,
+          node: <ColorPickerDemo />,
+        },
+      ],
+    }
+  );
+
+  cat("Data display").components.push(
+    {
+      id: "tree-view",
+      name: "Tree View",
+      blurb: "Collapsible nested list with expand/collapse and selection.",
+      a11y: "Rows are clickable; chevron rotates on expand. Selected row gets lime accent.",
+      css: ".vb-tree__row--selected",
+      props: [
+        p("nodes", "TreeNode[]", "required", "{ id, label, children? }[]"),
+        p("selected", "string", "—", "Selected node id."),
+        p("onSelect", "(id: string) => void", "—", "Selection handler."),
+      ],
+      demos: [
+        {
+          title: "File tree",
+          code: `<TreeView
+  nodes={[
+    { id: "src", label: "src", children: [
+      { id: "components", label: "components" },
+      { id: "styles", label: "styles" },
+    ]},
+    { id: "public", label: "public" },
+  ]}
+  onSelect={setSelected}
+/>`,
+          node: <TreeViewDemo />,
+        },
+      ],
+    },
+    {
+      id: "data-grid",
+      name: "Data Grid",
+      blurb: "Sortable table with clickable headers and direction indicators.",
+      a11y: "Uses semantic table; sortable headers are buttons with pointer cursor.",
+      css: ".vb-datagrid  /* bordered wrapper */",
+      props: [
+        p("columns", "{ key, label, sortable? }[]", "required", "Column definitions."),
+        p("rows", "Record<string, unknown>[]", "required", "Row data."),
+      ],
+      demos: [
+        {
+          title: "Sortable",
+          code: `<DataGrid
+  columns={[
+    { key: "name", label: "Name", sortable: true },
+    { key: "status", label: "Status" },
+  ]}
+  rows={[
+    { name: "web-prod", status: "running" },
+    { name: "worker-2", status: "building" },
+  ]}
+/>`,
+          node: <DataGridDemo />,
+        },
+      ],
+    }
+  );
+
+  cat("Surfaces").components.push({
+    id: "carousel",
+    name: "Carousel",
+    blurb: "Swipeable content slider with dots and arrow controls, optional autoplay.",
+    a11y: "Controls have aria-labels; dots announce slide numbers.",
+    css: ".vb-carousel__dot--active",
+    props: [
+      p("items", "string[]", "required", "Slide content (strings for demo; use nodes in your app)."),
+      p("autoPlay", "boolean", "false", "Auto-advance every 3s, pauses on hover."),
+    ],
+    demos: [
+      {
+        title: "Three slides",
+        code: `<Carousel items={["Slide one", "Slide two", "Slide three"]} autoPlay />`,
+        node: <CarouselDemo />,
+      },
+    ],
+  });
 
   cat("Feedback").components.push(
     {

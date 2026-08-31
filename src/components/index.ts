@@ -60,3 +60,5 @@ export { AvatarGroup, ProgressRing, Stat, Timeline, Sparkline, Banner } from "./
 export type { AvatarGroupProps, ProgressRingProps, StatProps, TimelineProps, TimelineItem, SparklineProps, BannerProps } from "./Blocks";
 export { ChatBubble, TypingIndicator, Chat, OTPInput, TagInput, FileUpload, CommandPalette } from "./AI";
 export type { ChatBubbleProps, ChatProps, OTPInputProps, TagInputProps, FileUploadProps, CommandPaletteProps, Command } from "./AI";
+export { Calendar, ColorPicker, TreeView, DataGrid, Carousel } from "./Advanced";
+export type { CalendarProps, ColorPickerProps, TreeViewProps, TreeNode, DataGridProps, DataGridColumn, CarouselProps } from "./Advanced";

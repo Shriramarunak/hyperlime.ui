@@ -37,6 +37,22 @@ const REGISTRY = {
   drawer: { file: "Navigation.tsx", css: ["navigation.css"], exports: ["Drawer"] },
   icon: { file: "Icon.tsx", css: [], exports: ["Icon"] },
   typography: { file: "Typography.tsx", css: [], exports: ["Typography"] },
+  calendar: { file: "Advanced.tsx", css: ["blocks.css"], exports: ["Calendar"] },
+  "color-picker": { file: "Advanced.tsx", css: ["blocks.css"], exports: ["ColorPicker"] },
+  "tree-view": { file: "Advanced.tsx", css: ["blocks.css"], exports: ["TreeView"] },
+  "data-grid": { file: "Advanced.tsx", css: ["blocks.css"], exports: ["DataGrid"] },
+  carousel: { file: "Advanced.tsx", css: ["blocks.css"], exports: ["Carousel"] },
+  "avatar-group": { file: "Blocks.tsx", css: ["blocks.css"], exports: ["AvatarGroup"] },
+  stat: { file: "Blocks.tsx", css: ["blocks.css"], exports: ["Stat"] },
+  timeline: { file: "Blocks.tsx", css: ["blocks.css"], exports: ["Timeline"] },
+  sparkline: { file: "Blocks.tsx", css: ["blocks.css"], exports: ["Sparkline"] },
+  banner: { file: "Blocks.tsx", css: ["blocks.css"], exports: ["Banner"] },
+  "progress-ring": { file: "Blocks.tsx", css: ["blocks.css"], exports: ["ProgressRing"] },
+  chat: { file: "AI.tsx", css: ["ai.css"], exports: ["Chat", "ChatBubble", "TypingIndicator"] },
+  "command-palette": { file: "AI.tsx", css: ["ai.css"], exports: ["CommandPalette"] },
+  "otp-input": { file: "AI.tsx", css: ["ai.css"], exports: ["OTPInput"] },
+  "tag-input": { file: "AI.tsx", css: ["ai.css"], exports: ["TagInput"] },
+  "file-upload": { file: "AI.tsx", css: ["ai.css"], exports: ["FileUpload"] },
 };
 
 const [name] = process.argv.slice(2);

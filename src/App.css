@@ -291,6 +291,17 @@
   flex-direction: column;
   gap: 24px;
   z-index: 10;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.docs__sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.docs__sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
 }
 
 .docs__cat {
@@ -412,6 +423,17 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
+}
+
+.props-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.props-wrap .props {
+  border: none;
+  border-radius: 0;
 }
 
 .props th {

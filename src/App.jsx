@@ -238,7 +238,8 @@ function PropsTable({ props }) {
     return <p className="doc__none mono-label">THIS COMPONENT TAKES NO PROPS.</p>;
   }
   return (
-    <table className="props">
+    <div className="props-wrap">
+      <table className="props">
       <thead>
         <tr>
           <th>Prop</th>
@@ -258,6 +259,7 @@ function PropsTable({ props }) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
 
