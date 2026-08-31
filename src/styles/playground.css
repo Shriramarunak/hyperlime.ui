@@ -1,0 +1,70 @@
+.pg {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.pg-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 110px;
+  padding: 28px 20px;
+  background: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0) 0 0 / 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pg-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-hover);
+}
+
+.pg-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pg-control__label {
+  font-size: 10px;
+}
+
+.pg-control select,
+.pg-control input[type="text"],
+.pg-control input:not([type="checkbox"]) {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 8px 10px;
+  min-width: 140px;
+}
+
+.pg-control--check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding-top: 18px;
+}
+
+.pg-code {
+  margin: 0;
+  padding: 14px 20px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.docpage__playground {
+  margin-top: 8px;
+}

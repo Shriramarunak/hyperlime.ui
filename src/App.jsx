@@ -3,7 +3,9 @@ import { Button, Badge, Card, Input, Kbd, Icon, Slider } from "./components";
 import { DOCS } from "./docsData";
 import { TEMPLATES } from "./templates";
 import { highlight } from "./utils/highlight";
+import { ComponentPlayground } from "./docsPlayground";
 import "./App.css";
+import "./styles/playground.css";
 
 const ACCENTS = [
   { name: "lime", accent: "#d6f32f", hover: "#e4ff4d" },
@@ -269,6 +271,8 @@ function DocPage({ comp, category, prev, next }) {
       <div className="mono-label doc__cat">{category}</div>
       <h3 className="doc__name">{comp.name}</h3>
       <p className="doc__blurb">{comp.blurb}</p>
+
+      <ComponentPlayground id={comp.id} />
 
       {comp.demos.map((demo) => (
         <div key={demo.title} className="docpage__demo">
@@ -592,6 +596,35 @@ function Customize({ accent, onSelectAccent }) {
     URL.revokeObjectURL(url);
   };
 
+  const downloadTokensJson = () => {
+    const json = JSON.stringify(
+      {
+        color: {
+          accent: accent.accent,
+          accentHover: accent.hover,
+          bg: "#0c0c07",
+          bgElevated: "#12120c",
+          border: "#26261a",
+          text: "#f2f2ea",
+        },
+        radius: {
+          sm: `${Math.max(radius - 4, 0)}px`,
+          md: `${radius}px`,
+          lg: `${radius + 4}px`,
+        },
+      },
+      null,
+      2
+    );
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "hyperlime-tokens.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section id="customize" className="section">
       <div className="container customize">
@@ -622,7 +655,10 @@ function Customize({ accent, onSelectAccent }) {
             <Button variant="secondary" size="sm" onClick={downloadTokens}>
               Download tokens.css
             </Button>
-            <span className="mono-label">EXPORTED WITH YOUR CURRENT PICKS</span>
+            <Button variant="ghost" size="sm" onClick={downloadTokensJson}>
+              Download tokens.json
+            </Button>
+            <span className="mono-label">FIGMA / STYLE DICTIONARY READY</span>
           </div>
         </div>
         <div className="customize__tokens">
